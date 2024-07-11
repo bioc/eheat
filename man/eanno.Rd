@@ -83,6 +83,7 @@ pacakge development, particularly when dealing with internal functions in the
 package namespace. In addition, all data has been attached in this object.
 }
 \examples{
+library(grid)
 x <- 1:10
 anno <- eanno(
     draw_fn = function(index, k, n) {
@@ -96,8 +97,8 @@ anno <- eanno(
     height = unit(2, "cm")
 )
 m <- rbind(1:10, 11:20)
-eheat(m, top_annotation = HeatmapAnnotation(foo = anno))
-eheat(m, top_annotation = HeatmapAnnotation(foo = anno), column_km = 2)
+eheat(m, top_annotation = eheat_anno(foo = anno))
+eheat(m, top_annotation = eheat_anno(foo = anno), column_km = 2)
 
 anno <- eanno(
     function(index, k, n, self) {

@@ -13,9 +13,9 @@ License: MIT + file LICENSE
 biocViews: Software, Visualization, Sequencing
 Encoding: UTF-8
 Depends:
-    ComplexHeatmap,
     ggplot2
 Imports: 
+    ComplexHeatmap,
     grid,
     cli,
     rlang (>= 1.1.0),
@@ -34,6 +34,7 @@ Collate:
     'eanno.R'
     'eheat-package.R'
     'eheat.R'
+    'eheat_anno.R'
     'gganno.R'
     'ggfit.R'
     'ggheat.R'

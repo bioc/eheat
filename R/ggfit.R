@@ -24,6 +24,7 @@
 #'   `lab` in `vp`.
 #' - align_with = `"full"`: Draw full ggplot object in `vp`.
 #' @examples
+#' library(grid)
 #' p <- ggplot(data.frame(x = 0:10, y = 0:10), aes(x, y)) +
 #'     geom_point()
 #' outerBox <- viewport(width = unit(125, "mm"), height = unit(150, "mm"))

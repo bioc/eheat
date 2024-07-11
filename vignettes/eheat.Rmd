@@ -83,14 +83,18 @@ colnames(mat) <- paste0("column", seq_len(nc))
 small_mat <- mat[1:9, 1:9]
 ``` 
 
-The central functions of the `eheat` package are `ggheat` and `gganno`. These
-two functions encompass all the necessary functionalities. `ggheat` serves as a
-substitute for the `ComplexHeatmap::Heatmap` function, while `gganno` replaces
-all the `anno_*` functions within the ComplexHeatmap package, offering a
+The core components of the `eheat` package are the `ggheat` and `gganno`
+functions, which encompass all necessary functionalities. The `ggheat` function
+acts as a substitute for the `ComplexHeatmap::Heatmap` function, while `gganno`
+replaces the `anno_*` functions in the `ComplexHeatmap` package, offering a
 comprehensive solution for our requirements. One of the key advantages of using
-ggplot2 in ComplexHeatmap is the ease of plotting statistical annotations.
-Another benefit is that the legends can be internally extracted from the ggplot2
-plot, eliminating the need for manual addition of legends.
+`ggplot2` in `ComplexHeatmap` is the ease of plotting statistical annotations.
+Another benefit is that the legends can be internally extracted from the
+`ggplot2` object, eliminating the need for manual addition of legends. In
+addition, the `eheat` package also includes the `eheat_anno` function, which
+serves as a counterpart to `HeatmapAnnotation` function. This function offers
+the advantage of automatic guessing of the `which` argument when used in
+conjunction with the `ggheat` function.
 
 ## `ggheat`
 Using `ggheat`, it is effortless to create a simple Heatmap. The default color
@@ -229,7 +233,7 @@ We can combine `layer_fun` or `cell_fun` from ComplexHeatmap with `ggfn`
 draw(
   ggheat(small_mat,
     layer_fun = function(...) {
-      grid.rect(gp = gpar(lwd = 2, fill = "transparent", col = "red"))
+      grid::grid.rect(gp = gpar(lwd = 2, fill = "transparent", col = "red"))
     }, column_km = 2L, row_km = 3
   )
 )
@@ -321,14 +325,14 @@ If a matrix is provided, it will be reshaped into long-format data.frame
 ```{r anno_data_matrix}
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = matrix(1:10, nrow = nrow(small_mat)),
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 dev.off()
@@ -339,7 +343,7 @@ additional necessary column added.
 ```{r anno_data_data_frame}
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = data.frame(
         value = seq_len(nrow(small_mat)),
@@ -349,7 +353,7 @@ draw(ggheat(small_mat,
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 dev.off()
@@ -360,14 +364,14 @@ reshaped into long-format data.frame.
 ```{r anno_data_atomic}
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = sample(1:10, nrow(small_mat)),
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 dev.off()
@@ -380,14 +384,14 @@ regard row as the observations.
 ```{r anno_data_null_column}
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = NULL,
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 dev.off()
@@ -396,15 +400,14 @@ dev.off()
 ```{r anno_data_null_row}
 pdf(NULL)
 draw(ggheat(small_mat,
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       data = NULL,
       function(p) {
         print(head(p$data))
         p
       }
-    ),
-    which = "row"
+    )
   )
 ))
 dev.off()
@@ -417,7 +420,7 @@ matrix will be transposed before pass into this function.
 ```{r anno_data_fun_column}
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = function(x) {
         if (identical(x, small_mat)) {
@@ -437,7 +440,7 @@ dev.off()
 ```{r anno_data_fun_row}
 pdf(NULL)
 draw(ggheat(small_mat,
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       data = function(x) {
         if (identical(x, small_mat)) {
@@ -447,8 +450,7 @@ draw(ggheat(small_mat,
         }
         rowSums(x)
       }
-    ),
-    which = "row"
+    )
   )
 ))
 dev.off()
@@ -459,42 +461,42 @@ Similarly, we can leverage the geometric objects (geoms) provided by ggplot2 in
 `ggfn` to create annotation. 
 ```{r anno_point}
 anno_data <- sample(1:10, nrow(small_mat))
-draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+with_ht_verbose(draw(ggheat(small_mat,
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_point(aes(x, value))
       }
-    ), which = "column"
+    )
   )
-))
+)))
 ```
 
 Legends will also be extracted, in the similar manner like passing them into
 `annotation_legend_list` argument. 
 ```{r anno_bar}
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
       }, height = unit(5, "cm")
-    ), which = "column"
+    )
   )
 ), merge_legends = TRUE)
 ```
 
 ```{r anno_box}
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_boxplot(aes(y = value, fill = factor(.slice)))
       }, height = unit(5, "cm")
-    ), which = "column"
+    )
   ), column_km = 2L
 ), merge_legends = TRUE)
 ```
@@ -505,7 +507,7 @@ colnames(box_matrix1) <- rep_len("group1", ncol(small_mat))
 box_matrix2 <- matrix(rnorm(ncol(small_mat)^2L, 20), nrow = ncol(small_mat))
 colnames(box_matrix2) <- rep_len("group2", ncol(small_mat))
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = cbind(box_matrix1, box_matrix2),
       function(p) {
@@ -533,22 +535,22 @@ draw(ggheat(small_mat,
             name = "Slice", type = "qual", palette = "Set1"
           )
       }, height = unit(3, "cm")
-    ), which = "column"
+    )
   ), column_km = 2L
 ), merge_legends = TRUE)
 ```
 
 ```{r, fig.height=8}
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + aes(y = value) + geom_text(aes(label = .row_index))
       }, height = unit(2, "cm")
-    ), which = "column"
+    )
   ),
-  bottom_annotation = HeatmapAnnotation(
+  bottom_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(y = value) +
@@ -556,11 +558,10 @@ draw(ggheat(small_mat,
           scale_y_reverse()
       },
       data = anno_data,
-      which = "column", height = unit(2, "cm")
-    ),
-    which = "column"
+      height = unit(2, "cm")
+    )
   ),
-  right_annotation = HeatmapAnnotation(
+  right_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(x = value) +
@@ -568,10 +569,9 @@ draw(ggheat(small_mat,
       },
       data = anno_data,
       width = unit(3, "cm")
-    ),
-    which = "row"
+    )
   ),
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(x = value) +
@@ -580,8 +580,7 @@ draw(ggheat(small_mat,
       },
       data = anno_data,
       width = unit(3, "cm")
-    ),
-    which = "row"
+    )
   ),
   row_km = 2L, column_km = 2L,
 ), merge_legends = TRUE)
@@ -590,14 +589,14 @@ draw(ggheat(small_mat,
 `gganno` can work with `Heatmap` function, in this way, legends won't be
 extracted. In general, we should just use `ggheat` and `gganno`.
 ```{r Heatmap_gganno}
-draw(Heatmap(small_mat,
-  top_annotation = HeatmapAnnotation(
+draw(ComplexHeatmap::Heatmap(small_mat,
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
       }
-    ), which = "column"
+    )
   )
 ), merge_legends = TRUE)
 ```
@@ -613,7 +612,7 @@ m <- matrix(rnorm(100), 10)
 
 # anno_gg-panel: clip = "off" -------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "off",
       height = unit(3, "cm"),
@@ -626,7 +625,7 @@ ggheat(m,
 ```{r anno_gg-panel-clip, fig.height=4, fig.width=5}
 # anno_gg-panel: clip = "on" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "on",
       height = unit(3, "cm"),
@@ -639,7 +638,7 @@ ggheat(m,
 ```{r anno_gg-plot, fig.height=4, fig.width=5}
 # anno_gg-plot --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "plot",
       height = unit(3, "cm"),
       show_name = FALSE
@@ -649,7 +648,7 @@ ggheat(m,
 
 # anno_gg-full --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "full",
       height = unit(3, "cm"),
       show_name = FALSE
@@ -663,7 +662,7 @@ allow more precise adjustment of the clip feature.
 ```{r anno_gg2-panel1, fig.height=4, fig.width=5}
 # anno_gg2-panel: margins = NULL -------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = NULL,
       height = unit(3, "cm"),
@@ -676,7 +675,7 @@ ggheat(m,
 ```{r anno_gg2-panel2, fig.height=4, fig.width=5}
 # anno_gg2-panel: margins = "l" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "l",
       height = unit(3, "cm"),
@@ -689,7 +688,7 @@ ggheat(m,
 ```{r anno_gg2-panel3, fig.height=4, fig.width=5}
 # anno_gg2-panel: margins = "r" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "r",
       height = unit(3, "cm"),
@@ -702,7 +701,7 @@ ggheat(m,
 ```{r anno_gg2-plot, fig.height=4, fig.width=5}
 # anno_gg2-plot ---------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "plot",
       height = unit(3, "cm"),
       show_name = FALSE
@@ -714,7 +713,7 @@ ggheat(m,
 ```{r anno_gg2-full, fig.height=4, fig.width=5}
 # anno_gg2-full --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(
       g + guides(colour = guide_legend(
         theme = theme(

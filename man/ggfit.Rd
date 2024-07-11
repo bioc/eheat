@@ -55,6 +55,7 @@ to \code{vp}.
 Fit ggplot2 panel or plot in a viewport
 }
 \examples{
+library(grid)
 p <- ggplot(data.frame(x = 0:10, y = 0:10), aes(x, y)) +
     geom_point()
 outerBox <- viewport(width = unit(125, "mm"), height = unit(150, "mm"))

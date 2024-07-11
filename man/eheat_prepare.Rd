@@ -4,8 +4,7 @@
 \alias{eheat_prepare.ggAnno}
 \alias{eheat_prepare.ggHeatmap}
 \alias{eheat_prepare}
-\alias{eheat_prepare.ExtendedHeatmap}
-\alias{eheat_prepare.ExtendedAnnotation}
+\alias{eheat_prepare.default}
 \title{Prepare ExtendedHeatmap}
 \usage{
 \method{eheat_prepare}{ggAnno}(object, ..., viewport, heatmap, name)
@@ -14,9 +13,7 @@
 
 eheat_prepare(object, ...)
 
-\method{eheat_prepare}{ExtendedHeatmap}(object, ...)
-
-\method{eheat_prepare}{ExtendedAnnotation}(object, ..., viewport, heatmap, name)
+\method{eheat_prepare}{default}(object, ...)
 }
 \arguments{
 \item{object}{A \link[=eheat]{ExtendedHeatmap} or \link[=eanno]{ExtendedAnnotation}
@@ -37,5 +34,6 @@ An modified \code{object} with the same class.
 Prepare ExtendedHeatmap
 }
 \examples{
-eheat_prepare(eheat(matrix(rnorm(81), nrow = 9)))
+# eheat_prepare(eheat(matrix(rnorm(81), nrow = 9)))
 }
+\keyword{internal}

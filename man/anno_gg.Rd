@@ -72,7 +72,7 @@ m <- matrix(rnorm(100), 10)
 
 # anno_gg-panel: clip = "off" -------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg(g, "panel",
             clip = "off",
             height = unit(6, "cm"),
@@ -83,7 +83,7 @@ ggheat(m,
 
 # anno_gg-panel: clip = "on" --------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg(g, "panel",
             clip = "on",
             height = unit(6, "cm"),
@@ -94,7 +94,7 @@ ggheat(m,
 
 # anno_gg-plot ---------------------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg(g, "plot",
             height = unit(6, "cm"),
             show_name = FALSE
@@ -104,7 +104,7 @@ ggheat(m,
 
 # anno_gg-full --------------------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg(g, "full",
             height = unit(6, "cm"),
             show_name = FALSE
@@ -113,7 +113,7 @@ ggheat(m,
 )
 # anno_gg2-panel: margins = NULL -------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg2(g, "panel",
             margins = NULL,
             height = unit(6, "cm"),
@@ -124,7 +124,7 @@ ggheat(m,
 
 # anno_gg2-panel: margins = "l" --------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg2(g, "panel",
             margins = "l",
             height = unit(6, "cm"),
@@ -135,7 +135,7 @@ ggheat(m,
 
 # anno_gg2-panel: margins = "r" --------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg2(g, "panel",
             margins = "r",
             height = unit(6, "cm"),
@@ -146,7 +146,7 @@ ggheat(m,
 
 # anno_gg2-plot ---------------------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg2(g, "plot",
             height = unit(6, "cm"),
             show_name = FALSE
@@ -156,7 +156,7 @@ ggheat(m,
 
 # anno_gg2-full --------------------
 ggheat(m,
-    top_annotation = HeatmapAnnotation(
+    top_annotation = eheat_anno(
         ggplot = anno_gg2(g, "full",
             height = unit(6, "cm"),
             show_name = FALSE

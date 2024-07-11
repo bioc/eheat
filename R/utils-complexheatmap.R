@@ -17,7 +17,7 @@ eheat_grob <- function(x, ...) grid::grid.grabExpr(expr = draw(x), ...)
 #' ggheat(matrix(rnorm(81), nrow = 9), column_km = 2L, name = "eheat_decorate")
 #' ComplexHeatmap::list_components()
 #' eheat_decorate("eheat_decorate_heatmap_body_wrap", {
-#'     grid.text("I'm from eheat_decorate",
+#'     grid::grid.text("I'm from eheat_decorate",
 #'         1.5 / 10, 2.5 / 4,
 #'         default.units = "npc"
 #'     )
@@ -100,16 +100,24 @@ set_ht_opt <- function(opt, value) {
 }
 
 eheat_which <- function(which = NULL) {
-    out <- eheat_env_get("current_annotation_which")
-    if (is.null(out)) {
+    if (is.null(out <- eheat_env_get("current_annotation_which"))) {
         out <- match.arg(which, c("column", "row"))
     }
     out
 }
 
+eheat_env <- function() utils::getFromNamespace(".ENV", ns = "ComplexHeatmap")
+
 eheat_env_get <- function(name) .subset2(eheat_env(), name)
 
-eheat_env <- function() utils::getFromNamespace(".ENV", ns = "ComplexHeatmap")
+eheat_env_set <- function(name, value) {
+    if (ht_opt$verbose) {
+        cli::cli_inform("Setting Complexheatmap option {name}: {value}")
+    }
+    old <- eheat_env_get(name)
+    assign(name, value, envir = eheat_env())
+    invisible(old)
+}
 
 eheat_full_slice_index <- function(order_list) {
     row_full <- unlist(order_list$row, recursive = FALSE, use.names = FALSE)
@@ -186,7 +194,7 @@ eheat_check_gp <- function(gp) {
     gp
 }
 
-#' @param data A data.frame in the order of slice, coord, index
+#' @param data A data.frame in the order of `slice`, `coord`, `index`
 #' @noRd
 eheat_scales <- function(data, lables, scale_fn) {
     lapply(split(data, data[[1L]]), function(slice_data) {

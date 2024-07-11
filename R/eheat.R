@@ -10,15 +10,6 @@
 #' - `border_gp`: Graphic parameters for the borders. If you want to set
 #' different parameters for different heatmap slices, please consider to use
 #' `decorate_heatmap_body`.
-#' - `cell_fun`: Self-defined function to add graphics on each cell. Seven
-#' parameters will be passed into this function: ``j``, ``i``, ``x``, ``y``,
-#' ``width``, ``height``, ``fill`` which are column index, row index in
-#' ``matrix``, coordinate of the cell, the width and height of the cell and the
-#' filled color. ``x``, ``y``, ``width`` and ``height`` are all `grid::unit`
-#' objects. Check
-#' <https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#customize-the-heatmap-body>. You can always use
-#' `self` to indicates the matrix attached in this Heatmap.
-#' - `layer_fun`: Similar as ``cell_fun``, but is vectorized.
 #' - `jitter`: Random shifts added to the matrix. The value can be logical or a
 #'      single numeric value. It it is ``TRUE``, random values from uniform
 #'      distribution between 0 and 1e-10 are generated. If it is a numeric
@@ -151,6 +142,18 @@
 #' `magick::filter_types`. The default is ``"Lanczos"``.
 #' - `post_fun` A function which will be executed after the heatmap list is
 #'   drawn.
+#' @inheritParams ComplexHeatmap::Heatmap
+#' @param cell_fun Self-defined function to add graphics on each cell. Seven
+#' parameters will be passed into this function: `j`, `i`, `x`, `y`, `width`,
+#' `height`, `fill` which are column index, row index of the `matrix`,
+#' coordinate of the cell, the width and height of the cell and the filled
+#' color. `x`, `y`, `width` and `height` are all [unit][grid::unit] objects.
+#' 
+#' Check
+#' <https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#customize-the-heatmap-body>. 
+#' 
+#' You can always use `self` to indicates the matrix attached in this Heatmap.
+#' @param layer_fun Similar as `cell_fun`, but is vectorized.
 #' @param legends_margin,legends_panel A list of
 #' [Legends][ComplexHeatmap::Legends-class] objects. `legends_margin` will be
 #' added in the `heatmap_legend_list` of
@@ -170,7 +173,7 @@
 #' - `+` or `%v%` append heatmaps and annotations to a list of heatmaps.
 #'
 #' The constructor function pretends to be a high-level graphic function because
-#' the ``show`` method of the `Heatmap-class` object actually plots the
+#' the `show` method of the `Heatmap-class` object actually plots the
 #' graphics.
 #' @return A `ExtendedHeatmap` Object.
 #' @examples
@@ -178,9 +181,47 @@
 #' @export
 #' @name eheat
 eheat <- function(matrix, ...,
-                  legends_margin = list(), legends_panel = list()) {
+                  cell_fun = NULL,
+                  layer_fun = NULL,
+                  top_annotation = NULL,
+                  bottom_annotation = NULL,
+                  left_annotation = NULL,
+                  right_annotation = NULL,
+                  legends_margin = list(),
+                  legends_panel = list()) {
     matrix <- build_heatmap_matrix(matrix)
-    out <- ComplexHeatmap::Heatmap(matrix = matrix, ...)
+    old <- eheat_env_set("current_annotation_which", "column")
+    on.exit(eheat_env_set("current_annotation_which", old), add = TRUE)
+    force(top_annotation)
+    force(bottom_annotation)
+    eheat_env_set("current_annotation_which", "row")
+    force(left_annotation)
+    force(right_annotation)
+
+    # we also restore the original annotation `which` value before running
+    # `ComplexHeatmap::Heatmap`. if we omit this line, the rownames/colnames
+    # will be strange. It'll affect the action of `anno_text`, which will be
+    # used to draw heatmap labels. it won't hurt to reset the value twice.
+    eheat_env_set("current_annotation_which", old)
+
+    # ComplexHeatmap::Heatmap will change the function environment of
+    # `layer_fun` and `cell_fun`. But I don't think this is necessay.
+    # so here we'll assign the `layer_fun` and `cell_fun` directly after
+    # creating the heatmap object.
+    out <- ComplexHeatmap::Heatmap(
+        matrix = matrix, ...,
+        layer_fun = NULL, cell_fun = NULL,
+        top_annotation = top_annotation,
+        bottom_annotation = bottom_annotation,
+        left_annotation = left_annotation,
+        right_annotation = right_annotation
+    )
+    if (!is.null(layer_fun)) {
+        out@matrix_param$layer_fun <- layer_fun
+    }
+    if (!is.null(cell_fun)) {
+        out@matrix_param$cell_fun <- cell_fun
+    }
     out <- methods::as(out, "ExtendedHeatmap")
     out@legends_margin <- legends_margin
     out@legends_panel <- legends_panel
@@ -246,7 +287,6 @@ wrap_heat_fn <- function(object, fun_name) {
     }
 }
 
-#' @importClassesFrom ComplexHeatmap HeatmapAnnotation
 #' @importFrom ComplexHeatmap make_layout
 #' @export
 #' @keywords internal

@@ -22,7 +22,7 @@ Decorate ComplexHeatmap
 ggheat(matrix(rnorm(81), nrow = 9), column_km = 2L, name = "eheat_decorate")
 ComplexHeatmap::list_components()
 eheat_decorate("eheat_decorate_heatmap_body_wrap", {
-    grid.text("I'm from eheat_decorate",
+    grid::grid.text("I'm from eheat_decorate",
         1.5 / 10, 2.5 / 4,
         default.units = "npc"
     )

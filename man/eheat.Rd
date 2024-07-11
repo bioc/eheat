@@ -6,7 +6,18 @@
 \alias{ExtendedHeatmap-class}
 \title{Extended Heatmap}
 \usage{
-eheat(matrix, ..., legends_margin = list(), legends_panel = list())
+eheat(
+  matrix,
+  ...,
+  cell_fun = NULL,
+  layer_fun = NULL,
+  top_annotation = NULL,
+  bottom_annotation = NULL,
+  left_annotation = NULL,
+  right_annotation = NULL,
+  legends_margin = list(),
+  legends_panel = list()
+)
 }
 \arguments{
 \item{matrix}{A matrix, if it is a simple vector, it will be converted to a
@@ -21,15 +32,6 @@ color.
 \item \code{border_gp}: Graphic parameters for the borders. If you want to set
 different parameters for different heatmap slices, please consider to use
 \code{decorate_heatmap_body}.
-\item \code{cell_fun}: Self-defined function to add graphics on each cell. Seven
-parameters will be passed into this function: \code{j}, \code{i}, \code{x}, \code{y},
-\code{width}, \code{height}, \code{fill} which are column index, row index in
-\code{matrix}, coordinate of the cell, the width and height of the cell and the
-filled color. \code{x}, \code{y}, \code{width} and \code{height} are all \code{grid::unit}
-objects. Check
-\url{https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#customize-the-heatmap-body}. You can always use
-\code{self} to indicates the matrix attached in this Heatmap.
-\item \code{layer_fun}: Similar as \code{cell_fun}, but is vectorized.
 \item \code{jitter}: Random shifts added to the matrix. The value can be logical or a
 single numeric value. It it is \code{TRUE}, random values from uniform
 distribution between 0 and 1e-10 are generated. If it is a numeric
@@ -164,6 +166,27 @@ image.
 \item \code{post_fun} A function which will be executed after the heatmap list is
 drawn.
 }}
+
+\item{cell_fun}{Self-defined function to add graphics on each cell. Seven
+parameters will be passed into this function: \code{j}, \code{i}, \code{x}, \code{y}, \code{width},
+\code{height}, \code{fill} which are column index, row index of the \code{matrix},
+coordinate of the cell, the width and height of the cell and the filled
+color. \code{x}, \code{y}, \code{width} and \code{height} are all \link[grid:unit]{unit} objects.
+
+Check
+\url{https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#customize-the-heatmap-body}.
+
+You can always use \code{self} to indicates the matrix attached in this Heatmap.}
+
+\item{layer_fun}{Similar as \code{cell_fun}, but is vectorized.}
+
+\item{top_annotation}{A \code{\link[ComplexHeatmap]{HeatmapAnnotation}} object.}
+
+\item{bottom_annotation}{A \code{\link[ComplexHeatmap]{HeatmapAnnotation}} object.}
+
+\item{left_annotation}{It should be specified by \code{\link[ComplexHeatmap]{rowAnnotation}}.}
+
+\item{right_annotation}{it should be specified by \code{\link[ComplexHeatmap]{rowAnnotation}}.}
 
 \item{legends_margin, legends_panel}{A list of
 \link[ComplexHeatmap:Legends-class]{Legends} objects. \code{legends_margin} will be

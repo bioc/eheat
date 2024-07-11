@@ -46,26 +46,6 @@ pak::pkg_install("Yunuuuu/eheat")
 
 ``` r
 library(eheat)
-#> Loading required package: ComplexHeatmap
-#> Loading required package: grid
-#> ========================================
-#> ComplexHeatmap version 2.20.0
-#> Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
-#> Github page: https://github.com/jokergoo/ComplexHeatmap
-#> Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
-#> 
-#> If you use it in published research, please cite either one:
-#> - Gu, Z. Complex Heatmap Visualization. iMeta 2022.
-#> - Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
-#>     genomic data. Bioinformatics 2016.
-#> 
-#> 
-#> The new InteractiveComplexHeatmap package can directly export static 
-#> complex heatmaps into an interactive Shiny app with zero effort. Have a try!
-#> 
-#> This message can be suppressed by:
-#>   suppressPackageStartupMessages(library(ComplexHeatmap))
-#> ========================================
 #> Loading required package: ggplot2
 ```
 
@@ -105,15 +85,19 @@ colnames(mat) <- paste0("column", seq_len(nc))
 small_mat <- mat[1:9, 1:9]
 ```
 
-The central functions of the `eheat` package are `ggheat` and `gganno`.
-These two functions encompass all the necessary functionalities.
-`ggheat` serves as a substitute for the `ComplexHeatmap::Heatmap`
-function, while `gganno` replaces all the `anno_*` functions within the
-ComplexHeatmap package, offering a comprehensive solution for our
-requirements. One of the key advantages of using ggplot2 in
-ComplexHeatmap is the ease of plotting statistical annotations. Another
-benefit is that the legends can be internally extracted from the ggplot2
-plot, eliminating the need for manual addition of legends.
+The core components of the `eheat` package are the `ggheat` and `gganno`
+functions, which encompass all necessary functionalities. The `ggheat`
+function acts as a substitute for the `ComplexHeatmap::Heatmap`
+function, while `gganno` replaces the `anno_*` functions in the
+`ComplexHeatmap` package, offering a comprehensive solution for our
+requirements. One of the key advantages of using `ggplot2` in
+`ComplexHeatmap` is the ease of plotting statistical annotations.
+Another benefit is that the legends can be internally extracted from the
+`ggplot2` object, eliminating the need for manual addition of legends.
+In addition, the `eheat` package also includes the `eheat_anno`
+function, which serves as a counterpart to `HeatmapAnnotation` function.
+This function offers the advantage of automatic guessing of the `which`
+argument when used in conjunction with the `ggheat` function.
 
 ## `ggheat`
 
@@ -303,7 +287,7 @@ We can combine `layer_fun` or `cell_fun` from ComplexHeatmap with `ggfn`
 draw(
   ggheat(small_mat,
     layer_fun = function(...) {
-      grid.rect(gp = gpar(lwd = 2, fill = "transparent", col = "red"))
+      grid::grid.rect(gp = gpar(lwd = 2, fill = "transparent", col = "red"))
     }, column_km = 2L, row_km = 3
   )
 )
@@ -415,14 +399,14 @@ If a matrix is provided, it will be reshaped into long-format data.frame
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = matrix(1:10, nrow = nrow(small_mat)),
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 #> Warning in matrix(1:10, nrow = nrow(small_mat)): data length [10] is not a
@@ -448,7 +432,7 @@ with additional necessary column added.
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = data.frame(
         value = seq_len(nrow(small_mat)),
@@ -458,7 +442,7 @@ draw(ggheat(small_mat,
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 #>   .slice .row_names .row_index x value letter
@@ -482,14 +466,14 @@ then reshaped into long-format data.frame.
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = sample(1:10, nrow(small_mat)),
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 #> ℹ convert simple vector to one-column matrix
@@ -516,14 +500,14 @@ transposed, since `gganno` will always regard row as the observations.
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = NULL,
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 #>   .slice .row_names .column_names .row_index .column_index x       value
@@ -544,15 +528,14 @@ dev.off()
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       data = NULL,
       function(p) {
         print(head(p$data))
         p
       }
-    ),
-    which = "row"
+    )
   )
 ))
 #>   .slice .row_names .column_names .row_index .column_index y      value
@@ -578,7 +561,7 @@ function.
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = function(x) {
         if (identical(x, small_mat)) {
@@ -605,7 +588,7 @@ dev.off()
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       data = function(x) {
         if (identical(x, small_mat)) {
@@ -615,8 +598,7 @@ draw(ggheat(small_mat,
         }
         rowSums(x)
       }
-    ),
-    which = "row"
+    )
   )
 ))
 #> [1] "matrix not transposed"
@@ -634,33 +616,73 @@ ggplot2 in `ggfn` to create annotation.
 
 ``` r
 anno_data <- sample(1:10, nrow(small_mat))
-draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+with_ht_verbose(draw(ggheat(small_mat,
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_point(aes(x, value))
       }
-    ), which = "column"
+    )
   )
-))
+)))
+#> Setting Complexheatmap option current_annotation_which: column
+#> Setting Complexheatmap option current_annotation_which: column
+#> construct ExtendedAnnotation with `eanno()`
 #> ℹ convert simple vector to one-column matrix
+#> in total there are 1 annotations (0 simple annotations)
+#> create a SingleAnnotation with name 'foo'
+#> foo: annotation is a AnnotationFunction object
+#> foo: it is a column annotation
+#> foo: adjust positions of annotation names
+#> foo: calcualte extensions caused by annotation name
+#> foo: calcualte width/height of SingleAnnotation based on the annotation function
+#> Setting Complexheatmap option current_annotation_which: column
+#> Setting Complexheatmap option current_annotation_which: row
+#> Setting Complexheatmap option current_annotation_which:
+#> This matrix has both negative and positive values, use a color mapping symmetric to zero
+#> color is not specified, use randomly generated colors
+#> input color is a color mapping function
+#> construct AnnotationFunction with 'anno_text()'
+#> construct AnnotationFunction with 'anno_text()'
+#> Setting Complexheatmap option current_annotation_which:
+#> 1 heatmaps/annotations, main heatmap: 1th
+#> auto adjust all heatmap/annotations by the main heatmap
+#> apply clustering on each slice (1 slices)
+#> reorder dendrograms in each row slice
+#> perform row clustering on the main heatmap
+#> adjust row order for all other heatmaps
+#> adjust heights for all other heatmaps
+#> remove row titles for all other heatmaps
+#> adjust row_gap for all other heatmaps
+#> prepare layout for heatmap: matrix_23
+#> apply clustering on each slice (1 slices)
+#> reorder dendrograms in each column slice
+#> adjust height of top annotation of heamtap matrix_23
+#> adjust title/dend height of all heatmaps
+#> adjust height to the main heatmap
+#> draw annotation generated by anno_text
+#> draw annotation generated by anno_text
+#> execute annotation function
+#> annotation generated by `gganno()`
 ```
 
 <img src="man/figures/README-anno_point-1.png" width="100%" />
+
+    #> draw annotation generated by gganno
 
 Legends will also be extracted, in the similar manner like passing them
 into `annotation_legend_list` argument.
 
 ``` r
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
       }, height = unit(5, "cm")
-    ), which = "column"
+    )
   )
 ), merge_legends = TRUE)
 #> ℹ convert simple vector to one-column matrix
@@ -670,13 +692,13 @@ draw(ggheat(small_mat,
 
 ``` r
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_boxplot(aes(y = value, fill = factor(.slice)))
       }, height = unit(5, "cm")
-    ), which = "column"
+    )
   ), column_km = 2L
 ), merge_legends = TRUE)
 #> ℹ convert simple vector to one-column matrix
@@ -690,7 +712,7 @@ colnames(box_matrix1) <- rep_len("group1", ncol(small_mat))
 box_matrix2 <- matrix(rnorm(ncol(small_mat)^2L, 20), nrow = ncol(small_mat))
 colnames(box_matrix2) <- rep_len("group2", ncol(small_mat))
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = cbind(box_matrix1, box_matrix2),
       function(p) {
@@ -718,7 +740,7 @@ draw(ggheat(small_mat,
             name = "Slice", type = "qual", palette = "Set1"
           )
       }, height = unit(3, "cm")
-    ), which = "column"
+    )
   ), column_km = 2L
 ), merge_legends = TRUE)
 ```
@@ -727,15 +749,15 @@ draw(ggheat(small_mat,
 
 ``` r
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + aes(y = value) + geom_text(aes(label = .row_index))
       }, height = unit(2, "cm")
-    ), which = "column"
+    )
   ),
-  bottom_annotation = HeatmapAnnotation(
+  bottom_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(y = value) +
@@ -743,11 +765,10 @@ draw(ggheat(small_mat,
           scale_y_reverse()
       },
       data = anno_data,
-      which = "column", height = unit(2, "cm")
-    ),
-    which = "column"
+      height = unit(2, "cm")
+    )
   ),
-  right_annotation = HeatmapAnnotation(
+  right_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(x = value) +
@@ -755,10 +776,9 @@ draw(ggheat(small_mat,
       },
       data = anno_data,
       width = unit(3, "cm")
-    ),
-    which = "row"
+    )
   ),
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(x = value) +
@@ -767,8 +787,7 @@ draw(ggheat(small_mat,
       },
       data = anno_data,
       width = unit(3, "cm")
-    ),
-    which = "row"
+    )
   ),
   row_km = 2L, column_km = 2L,
 ), merge_legends = TRUE)
@@ -784,14 +803,14 @@ draw(ggheat(small_mat,
 extracted. In general, we should just use `ggheat` and `gganno`.
 
 ``` r
-draw(Heatmap(small_mat,
-  top_annotation = HeatmapAnnotation(
+draw(ComplexHeatmap::Heatmap(small_mat,
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
       }
-    ), which = "column"
+    )
   )
 ), merge_legends = TRUE)
 #> ℹ convert simple vector to one-column matrix
@@ -812,7 +831,7 @@ m <- matrix(rnorm(100), 10)
 
 # anno_gg-panel: clip = "off" -------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "off",
       height = unit(3, "cm"),
@@ -827,7 +846,7 @@ ggheat(m,
 ``` r
 # anno_gg-panel: clip = "on" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "on",
       height = unit(3, "cm"),
@@ -842,7 +861,7 @@ ggheat(m,
 ``` r
 # anno_gg-plot --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "plot",
       height = unit(3, "cm"),
       show_name = FALSE
@@ -857,7 +876,7 @@ ggheat(m,
 
 # anno_gg-full --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "full",
       height = unit(3, "cm"),
       show_name = FALSE
@@ -874,7 +893,7 @@ arguments, and allow more precise adjustment of the clip feature.
 ``` r
 # anno_gg2-panel: margins = NULL -------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = NULL,
       height = unit(3, "cm"),
@@ -889,7 +908,7 @@ ggheat(m,
 ``` r
 # anno_gg2-panel: margins = "l" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "l",
       height = unit(3, "cm"),
@@ -904,7 +923,7 @@ ggheat(m,
 ``` r
 # anno_gg2-panel: margins = "r" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "r",
       height = unit(3, "cm"),
@@ -919,7 +938,7 @@ ggheat(m,
 ``` r
 # anno_gg2-plot ---------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "plot",
       height = unit(3, "cm"),
       show_name = FALSE
@@ -933,7 +952,7 @@ ggheat(m,
 ``` r
 # anno_gg2-full --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(
       g + guides(colour = guide_legend(
         theme = theme(
@@ -976,31 +995,31 @@ sessionInfo()
 #> tzcode source: system (glibc)
 #> 
 #> attached base packages:
-#> [1] grid      stats     graphics  grDevices utils     datasets  methods  
-#> [8] base     
+#> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] eheat_0.99.8          ggplot2_3.5.1         ComplexHeatmap_2.20.0
+#> [1] eheat_0.99.8  ggplot2_3.5.1
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] utf8_1.2.4          generics_0.1.3      tidyr_1.3.1        
-#>  [4] shape_1.4.6.1       digest_0.6.36       magrittr_2.0.3     
-#>  [7] evaluate_0.24.0     RColorBrewer_1.1-3  iterators_1.0.14   
-#> [10] circlize_0.4.16     fastmap_1.2.0       foreach_1.5.2      
-#> [13] doParallel_1.0.17   GlobalOptions_0.1.2 purrr_1.0.2        
-#> [16] fansi_1.0.6         viridisLite_0.4.2   scales_1.3.0       
-#> [19] codetools_0.2-20    cli_3.6.3           rlang_1.1.4        
-#> [22] crayon_1.5.3        munsell_0.5.1       withr_3.0.0        
-#> [25] yaml_2.3.8          ggh4x_0.2.8         tools_4.4.0        
-#> [28] parallel_4.4.0      dplyr_1.1.4         colorspace_2.1-0   
-#> [31] GetoptLong_1.0.5    BiocGenerics_0.50.0 vctrs_0.6.5        
-#> [34] R6_2.5.1            png_0.1-8           matrixStats_1.3.0  
-#> [37] stats4_4.4.0        lifecycle_1.0.4     magick_2.8.3       
-#> [40] S4Vectors_0.42.0    IRanges_2.38.0      clue_0.3-65        
-#> [43] cluster_2.1.6       pkgconfig_2.0.3     pillar_1.9.0       
-#> [46] gtable_0.3.5        glue_1.7.0          Rcpp_1.0.12        
-#> [49] highr_0.11          xfun_0.45           tibble_3.2.1       
-#> [52] tidyselect_1.2.1    knitr_1.47          farver_2.1.2       
-#> [55] rjson_0.2.21        htmltools_0.5.8.1   labeling_0.4.3     
-#> [58] rmarkdown_2.27      Cairo_1.6-2         compiler_4.4.0
+#>  [1] tidyr_1.3.1           utf8_1.2.4            generics_0.1.3       
+#>  [4] shape_1.4.6.1         digest_0.6.36         magrittr_2.0.3       
+#>  [7] evaluate_0.24.0       grid_4.4.0            RColorBrewer_1.1-3   
+#> [10] iterators_1.0.14      circlize_0.4.16       fastmap_1.2.0        
+#> [13] foreach_1.5.2         doParallel_1.0.17     GlobalOptions_0.1.2  
+#> [16] ComplexHeatmap_2.20.0 purrr_1.0.2           fansi_1.0.6          
+#> [19] viridisLite_0.4.2     scales_1.3.0          codetools_0.2-20     
+#> [22] cli_3.6.3             rlang_1.1.4           crayon_1.5.3         
+#> [25] munsell_0.5.1         withr_3.0.0           yaml_2.3.8           
+#> [28] ggh4x_0.2.8           tools_4.4.0           parallel_4.4.0       
+#> [31] dplyr_1.1.4           colorspace_2.1-0      GetoptLong_1.0.5     
+#> [34] BiocGenerics_0.50.0   vctrs_0.6.5           R6_2.5.1             
+#> [37] png_0.1-8             magick_2.8.3          matrixStats_1.3.0    
+#> [40] stats4_4.4.0          lifecycle_1.0.4       S4Vectors_0.42.0     
+#> [43] IRanges_2.38.0        clue_0.3-65           cluster_2.1.6        
+#> [46] pkgconfig_2.0.3       pillar_1.9.0          gtable_0.3.5         
+#> [49] Rcpp_1.0.12           glue_1.7.0            highr_0.11           
+#> [52] xfun_0.45             tibble_3.2.1          tidyselect_1.2.1     
+#> [55] knitr_1.47            farver_2.1.2          rjson_0.2.21         
+#> [58] htmltools_0.5.8.1     labeling_0.4.3        rmarkdown_2.27       
+#> [61] Cairo_1.6-2           compiler_4.4.0
 ```
