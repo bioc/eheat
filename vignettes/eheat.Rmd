@@ -306,14 +306,12 @@ contain following columns:
     exist) and index of the original data.
 
   - `.column_names` and `.column_index`: the column names (only applicable when
-    names exist) and index of the original data (`only applicable when
-    the original data is a matrix`).
+    names exist) and index of the original data (`only applicable when the original data is a matrix`).
 
   - `x` / `y`: indicating the x-axis (or y-axis) coordinates. Don't use
     `coord_flip` to flip coordinates as it may disrupt internal operations.
 
-  - `value`: the actual matrix value of the annotation matrix (`only applicable
-    when the original data is a matrix`).
+  - `value`: the actual matrix value of the annotation matrix (`only applicable when the original data is a matrix`).
 
 `gganno` can be seamlessly combined with both `ggheat` and
 `ComplexHeatmap::Heatmap`, although legends will not be extracted in the later
