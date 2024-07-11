@@ -243,7 +243,7 @@ draw(
 
 <img src="man/figures/README-ggheat_background-1.png" width="100%" />
 
-You can customize it easily use `geom_tile`.
+You can customize the heatmap filling easily with `geom_tile`.
 
 ``` r
 draw(
@@ -351,7 +351,9 @@ draw(
 
 <img src="man/figures/README-ggheat_legend_name2-1.png" width="100%" />
 
-Inside guides will be kept in the panel.
+Inside guides will be kept in the heatmap body panel since this type of
+legend should be intentionally placed by the user, so `ggheat` will not
+include it in the collection.
 
 ``` r
 draw(
@@ -377,10 +379,10 @@ draw(
 
 The same with `ggheat`, the essential parameter of `gganno` is also the
 `ggfn`, which accepts a ggplot2 object with a default data and mapping
-created by `ggplot(data, aes(.data$x))` /
-`ggplot(data, ggplot2::aes(y = .data$y))`. The original matrix will be
-converted into a long-data.frame (`gganno` always regard row as the
-observations) with following columns.
+created by `ggplot(data, aes(.data$x))` (which = `"column"`) /
+`ggplot(data, ggplot2::aes(y = .data$y))` (which = `"row"`). The
+original matrix will be converted into a long-data.frame (`gganno`
+always regard row as the observations) with following columns.
 
 - `.slice`: the slice row (which = `"row"`) or column (which =
   `"column"`) number.
@@ -415,7 +417,7 @@ draw(ggheat(small_mat,
 <img src="man/figures/README-anno_point-1.png" width="100%" />
 
 Legends will also be extracted, in the similar manner like passing them
-into `annotation_legend_list`.
+into `annotation_legend_list` argument.
 
 ``` r
 draw(ggheat(small_mat,
@@ -545,8 +547,8 @@ draw(ggheat(small_mat,
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-`gganno` can work with `Heatmap` function, but cannot extract the
-legend.
+`gganno` can work with `Heatmap` function, in this way, legends won’t be
+extracted.
 
 ``` r
 draw(Heatmap(small_mat,
