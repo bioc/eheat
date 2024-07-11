@@ -380,31 +380,140 @@ draw(
 The same with `ggheat`, the essential parameter of `gganno` is also the
 `ggfn`, which accepts a ggplot2 object with a default data and mapping
 created by `ggplot(data, aes(.data$x))` (which = `"column"`) /
-`ggplot(data, ggplot2::aes(y = .data$y))` (which = `"row"`). The
-original matrix will be converted into a long-data.frame (`gganno`
-always regard row as the observations) with following columns.
+`ggplot(data, ggplot2::aes(y = .data$y))` (which = `"row"`).
+
+If the original data is a matrix, it’ll be reshaped into a long-format
+data frame in the `ggplot2` plot data. The final ggplot2 plot data will
+contain following columns:
 
 - `.slice`: the slice row (which = `"row"`) or column (which =
   `"column"`) number.
-- `.row_names` and `.column_names`: the row and column names of the
-  original matrix (only applicable when names exist).
-- `.row_index` and `.column_index`: the row and column index of the
-  original matrix.
-- `x` / `y`: indicating the x-axis (or y-axis) coordinates.
-- `value`: the actual matrix value of the annotation matrix.
+
+- `.row_names` and `.row_index`: the row names (only applicable when
+  names exist) and index of the original data.
+
+- `.column_names` and `.column_index`: the column names (only applicable
+  when names exist) and index of the original data
+  (`only applicable when     the original data is a matrix`).
+
+- `x` / `y`: indicating the x-axis (or y-axis) coordinates. Don’t use
+  `coord_flip` to flip coordinates as it may disrupt internal
+  operations.
+
+- `value`: the actual matrix value of the annotation matrix
+  (`only applicable     when the original data is a matrix`).
 
 `gganno` can be seamlessly combined with both `ggheat` and
 `ComplexHeatmap::Heatmap`, although legends will not be extracted in the
 later case.
 
-In general, we should just use `ggheat` and `gganno`.
+If a matrix is provided, it will be reshaped into long-format data.frame
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = matrix(1:10, nrow = nrow(small_mat)),
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    ), which = "column"
+  )
+))
+#> Warning in matrix(1:10, nrow = nrow(small_mat)): data length [10] is not a
+#> sub-multiple or multiple of the number of rows [9]
+#>   .slice .row_index .column_index x value
+#> 1      1          1             1 1     1
+#> 2      1          1             2 1    10
+#> 3      1          2             1 8     2
+#> 4      1          2             2 8     1
+#> 5      1          3             1 6     3
+#> 6      1          3             2 6     2
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
+If a data frame is provided, it will be preserved in its original form
+with additional necessary column added.
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = data.frame(
+        value = seq_len(nrow(small_mat)),
+        letter = sample(letters, nrow(small_mat), replace = TRUE)
+      ),
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    ), which = "column"
+  )
+))
+#>   .slice .row_names .row_index x value letter
+#> 1      1          1          1 1     1      w
+#> 2      1          2          2 8     2      r
+#> 3      1          3          3 6     3      l
+#> 4      1          4          4 2     4      r
+#> 5      1          5          5 3     5      g
+#> 6      1          6          6 7     6      z
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
+If provided an atomic vector, it will be converted into a matrix and
+then reshaped into long-format data.frame.
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = sample(1:10, nrow(small_mat)),
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    ), which = "column"
+  )
+))
+#> ℹ convert simple vector to one-column matrix
+#>   .slice .column_names .row_index .column_index x value
+#> 1      1            V1          1             1 1     9
+#> 2      1            V1          2             1 8     3
+#> 3      1            V1          3             1 6     1
+#> 4      1            V1          4             1 2    10
+#> 5      1            V1          5             1 3     7
+#> 6      1            V1          6             1 7     6
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
+Similarly, we can leverage the geometric objects (geoms) provided by
+ggplot2 in `ggfn` to create annotation.
 
 ``` r
 anno_data <- sample(1:10, nrow(small_mat))
 draw(ggheat(small_mat,
   top_annotation = HeatmapAnnotation(
     foo = gganno(
-      matrix = anno_data,
+      data = anno_data,
       function(p) {
         p + geom_point(aes(x, value))
       }
@@ -423,7 +532,7 @@ into `annotation_legend_list` argument.
 draw(ggheat(small_mat,
   top_annotation = HeatmapAnnotation(
     foo = gganno(
-      matrix = anno_data,
+      data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
       }, height = unit(5, "cm")
@@ -439,7 +548,7 @@ draw(ggheat(small_mat,
 draw(ggheat(small_mat,
   top_annotation = HeatmapAnnotation(
     foo = gganno(
-      matrix = anno_data,
+      data = anno_data,
       function(p) {
         p + geom_boxplot(aes(y = value, fill = factor(.slice)))
       }, height = unit(5, "cm")
@@ -459,7 +568,7 @@ colnames(box_matrix2) <- rep_len("group2", ncol(small_mat))
 draw(ggheat(small_mat,
   top_annotation = HeatmapAnnotation(
     foo = gganno(
-      matrix = cbind(box_matrix1, box_matrix2),
+      data = cbind(box_matrix1, box_matrix2),
       function(p) {
         p +
           geom_violin(
@@ -496,7 +605,7 @@ draw(ggheat(small_mat,
 draw(ggheat(small_mat,
   top_annotation = HeatmapAnnotation(
     foo = gganno(
-      matrix = anno_data,
+      data = anno_data,
       function(p) {
         p + aes(y = value) + geom_text(aes(label = .row_index))
       }, height = unit(2, "cm")
@@ -509,7 +618,7 @@ draw(ggheat(small_mat,
           geom_text(aes(label = .row_index)) +
           scale_y_reverse()
       },
-      matrix = anno_data,
+      data = anno_data,
       which = "column", height = unit(2, "cm")
     ),
     which = "column"
@@ -520,7 +629,7 @@ draw(ggheat(small_mat,
         p + aes(x = value) +
           geom_text(aes(label = .row_index))
       },
-      matrix = anno_data,
+      data = anno_data,
       width = unit(3, "cm")
     ),
     which = "row"
@@ -532,7 +641,7 @@ draw(ggheat(small_mat,
           geom_text(aes(label = .row_index)) +
           scale_x_reverse()
       },
-      matrix = anno_data,
+      data = anno_data,
       width = unit(3, "cm")
     ),
     which = "row"
@@ -548,13 +657,13 @@ draw(ggheat(small_mat,
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 `gganno` can work with `Heatmap` function, in this way, legends won’t be
-extracted.
+extracted. In general, we should just use `ggheat` and `gganno`.
 
 ``` r
 draw(Heatmap(small_mat,
   top_annotation = HeatmapAnnotation(
     foo = gganno(
-      matrix = anno_data,
+      data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
       }

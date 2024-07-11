@@ -9,7 +9,7 @@
 eanno(
   draw_fn,
   ...,
-  matrix = NULL,
+  data = NULL,
   which = NULL,
   subset_rule = NULL,
   width = NULL,
@@ -25,30 +25,28 @@ eanno(
 \href{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#implement-new-annotation-functions}{ComplexHeatmap Manual}
 for details.
 
-The function must have at least Four arguments: \code{index}, \code{k}, \code{n}, and
-\code{matrix} (the names of the arguments can be arbitrary) where \code{k} and \code{n} are
-optional.  \code{index} corresponds to the indices of rows or columns of the
-heatmap. The value of \code{index} is not necessarily to be the whole row indices
-or column indices in the heatmap. It can also be a subset of the indices if
-the annotation is split into slices according to the split of the heatmap.
-\code{index} is reordered according to the reordering of heatmap rows or columns
-(e.g. by clustering). So, \code{index} actually contains a list of row or column
-indices for the current slice after row or column reordering. \code{matrix} will
-contain the data passed into the argument \code{matrix}.
+The function must have at least Four arguments: \code{index}, \code{k}, \code{n} (the names
+of the arguments can be arbitrary) where \code{k} and \code{n} are optional.  \code{index}
+corresponds to the indices of rows or columns of the heatmap. The value of
+\code{index} is not necessarily to be the whole row indices or column indices in
+the heatmap. It can also be a subset of the indices if the annotation is
+split into slices according to the split of the heatmap.  \code{index} is
+reordered according to the reordering of heatmap rows or columns (e.g. by
+clustering). So, \code{index} actually contains a list of row or column indices
+for the current slice after row or column reordering.
 
-k corresponds to the current slice and n corresponds to the total number of
-slices.
+\code{k} corresponds to the current slice and \code{n} corresponds to the total number
+of slices.
 
-You can always use \code{self} to indicates the matrix attached in this
+You can always use \code{self} to indicates the \code{data} attached in this
 annotation.}
 
 \item{...}{Additional arguments passed on to \code{draw_fn}. Only named arguments
 can be subsettable.}
 
-\item{matrix}{A matrix, if it is a simple vector, it will be converted to a
-one-column matrix. Data.frame will also be coerced into matrix. If \code{NULL},
-the matrix from heatmap will be used. You can also provide a function to
-transform the matrix.}
+\item{data}{A \code{matrix} or \code{data.frame}, if it is a simple vector, it will be
+converted to a one-column matrix. If \code{NULL}, the matrix from the heatmap will
+be used. You can also provide a function to transform the matrix.}
 
 \item{which}{Whether it is drawn as a column annotation or a row annotation?}
 
@@ -110,7 +108,7 @@ anno <- eanno(
         if (k == 1) grid.yaxis()
         popViewport()
     },
-    matrix = rnorm(10L), subset_rule = TRUE,
+    data = rnorm(10L), subset_rule = TRUE,
     height = unit(2, "cm")
 )
 draw(anno)

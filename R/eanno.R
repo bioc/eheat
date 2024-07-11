@@ -4,29 +4,27 @@
 #' Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#implement-new-annotation-functions)
 #' for details.
 #'
-#' The function must have at least Four arguments: `index`, `k`, `n`, and
-#' `matrix` (the names of the arguments can be arbitrary) where `k` and `n` are
-#' optional.  `index` corresponds to the indices of rows or columns of the
-#' heatmap. The value of `index` is not necessarily to be the whole row indices
-#' or column indices in the heatmap. It can also be a subset of the indices if
-#' the annotation is split into slices according to the split of the heatmap.
-#' `index` is reordered according to the reordering of heatmap rows or columns
-#' (e.g. by clustering). So, `index` actually contains a list of row or column
-#' indices for the current slice after row or column reordering. `matrix` will
-#' contain the data passed into the argument `matrix`.
+#' The function must have at least Four arguments: `index`, `k`, `n` (the names
+#' of the arguments can be arbitrary) where `k` and `n` are optional.  `index`
+#' corresponds to the indices of rows or columns of the heatmap. The value of
+#' `index` is not necessarily to be the whole row indices or column indices in
+#' the heatmap. It can also be a subset of the indices if the annotation is
+#' split into slices according to the split of the heatmap.  `index` is
+#' reordered according to the reordering of heatmap rows or columns (e.g. by
+#' clustering). So, `index` actually contains a list of row or column indices
+#' for the current slice after row or column reordering.
 #'
-#' k corresponds to the current slice and n corresponds to the total number of
-#' slices.
+#' `k` corresponds to the current slice and `n` corresponds to the total number
+#' of slices.
 #'
-#' You can always use `self` to indicates the matrix attached in this
+#' You can always use `self` to indicates the `data` attached in this
 #' annotation.
 #'
 #' @param ... Additional arguments passed on to `draw_fn`. Only named arguments
 #' can be subsettable.
-#' @param matrix A matrix, if it is a simple vector, it will be converted to a
-#' one-column matrix. Data.frame will also be coerced into matrix. If `NULL`,
-#' the matrix from heatmap will be used. You can also provide a function to
-#' transform the matrix.
+#' @param data A `matrix` or `data.frame`, if it is a simple vector, it will be
+#' converted to a one-column matrix. If `NULL`, the matrix from the heatmap will
+#' be used. You can also provide a function to transform the matrix.
 #' @inheritParams ComplexHeatmap::AnnotationFunction
 #' @param subset_rule A list of function to subset variables in `...`.
 #' @param fun_name Name of the annotation function, only used for message.
@@ -70,7 +68,7 @@
 #'         if (k == 1) grid.yaxis()
 #'         popViewport()
 #'     },
-#'     matrix = rnorm(10L), subset_rule = TRUE,
+#'     data = rnorm(10L), subset_rule = TRUE,
 #'     height = unit(2, "cm")
 #' )
 #' draw(anno)
@@ -78,7 +76,7 @@
 #' @seealso [AnnotationFunction][ComplexHeatmap::AnnotationFunction]
 #' @return A `ExtendedAnnotation` object.
 #' @export
-eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
+eanno <- function(draw_fn, ..., data = NULL, which = NULL, subset_rule = NULL,
                   width = NULL, height = NULL, show_name = TRUE,
                   legends_margin = NULL, legends_panel = NULL,
                   fun_name = NULL) {
@@ -91,14 +89,14 @@ eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
     #       package namespace can be used directly
     draw_fn <- allow_lambda(draw_fn)
     assert_(draw_fn, is.function, "a function")
-    matrix <- allow_lambda(matrix)
-    if (is.null(matrix)) {
+    data <- allow_lambda(data)
+    if (is.null(data)) {
         n <- NA
-    } else if (is.function(matrix)) {
+    } else if (is.function(data)) {
         n <- NA
     } else {
-        matrix <- build_matrix(matrix)
-        n <- nrow(matrix)
+        data <- build_anno_data(data)
+        n <- nrow(data)
     }
     which <- eheat_which(which)
 
@@ -113,7 +111,7 @@ eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
         if (!is_scalar(subset_rule)) {
             cli::cli_abort("{.arg subset_rule} must be a single boolean value")
         } else if (is.na(subset_rule)) {
-            cli::cli_abort("{.arg subset_rule} cannot be missing value")
+            cli::cli_abort("{.arg subset_rule} cannot be `NA`")
         }
 
         if (subsettable <- subset_rule) {
@@ -146,7 +144,7 @@ eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
     # contruct ExtendedAnnotation -----------------------------
     anno <- methods::new("ExtendedAnnotation")
     anno@dots <- dots
-    anno@matrix <- matrix
+    anno@data <- data
     anno@which <- which
     anno@fun <- draw_fn
     anno@fun_name <- fun_name %||% "eanno"
@@ -184,6 +182,8 @@ eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
     if (!x@subsettable) {
         cli::cli_abort("{.arg x} is not subsettable.")
     }
+
+    # subset dots ---------------------------------------
     rules <- x@subset_rule
     x@dots[rlang::have_name(x@dots)] <- imap(
         x@dots[rlang::have_name(x@dots)], function(var, nm) {
@@ -210,7 +210,15 @@ eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
             }
         }
     )
-    if (is.matrix(x@matrix)) x@matrix <- x@matrix[i, , drop = FALSE]
+
+    # subset the annotation data ---------------------
+    if (inherits(x@data, c("tbl_df", "data.table"))) {
+        # For tibble and data.table, no `drop` argument
+        x@data <- x@data[i, ]
+    } else if (is.matrix(x@data) || is.data.frame(x@data)) {
+        # For matrix and data.frame
+        x@data <- x@data[i, , drop = FALSE]
+    }
     if (is_scalar(x@n) && is.na(x@n)) return(x) # styler: off
     if (is.logical(i)) {
         x@n <- sum(i)
@@ -227,14 +235,14 @@ eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
 methods::setClass(
     "ExtendedAnnotation",
     slots = list(
-        matrix = "ANY",
+        data = "ANY",
         dots = "list",
         legends_margin = "list",
         legends_panel = "list",
         initialized = "logical"
     ),
     prototype = list(
-        matrix = NULL,
+        data = NULL,
         dots = list(),
         legends_margin = list(),
         legends_panel = list(),
@@ -244,16 +252,20 @@ methods::setClass(
 )
 
 methods::setValidity("ExtendedAnnotation", function(object) {
-    matrix <- object@matrix
-    if (!is.null(matrix) && !is.function(matrix) && !is.matrix(matrix)) {
-        cli::cli_abort("{.code @matrix} must be a matrix or a function or NULL")
+    data <- object@data
+    if (!is.null(data) && !is.function(data) &&
+        !(is.matrix(data) || inherits(data, "data.frame"))) {
+        cli::cli_abort(paste(
+            "{.code @data} must be a",
+            "matrix or data.frame or a function or `NULL`"
+        ))
     }
     TRUE
 })
 
 wrap_anno_fn <- function(object) {
     # prepare annotation function --------------------------
-    matrix <- object@matrix
+    data <- object@data
     dots <- object@dots
     fn <- object@fun
     args <- formals(fn)
@@ -262,7 +274,7 @@ wrap_anno_fn <- function(object) {
     # also catches the case where there's a `self = NULL` argument.
     if (!is.null(.subset2(args, "self")) || "self" %in% names(args)) {
         function(index, k, n) {
-            rlang::inject(fn(index, k, n, !!!dots, self = matrix))
+            rlang::inject(fn(index, k, n, !!!dots, self = data))
         }
     } else {
         function(index, k, n) {
@@ -290,48 +302,48 @@ methods::setMethod(
             id <- sprintf("%s (%s)", object@fun_name, name)
         }
         # prepare ExtendedAnnotation matrix data ---------------------------
-        mat <- object@matrix
+        anno_data <- object@data
         if (is.null(heatmap)) {
             heat_matrix <- NULL
         } else {
             heat_matrix <- heatmap@matrix
         }
-        if (is.null(heat_matrix) && (is.null(mat) || is.function(mat))) {
+        if (is.null(heat_matrix) &&
+            (is.null(anno_data) || is.function(anno_data))) {
             cli::cli_abort(paste(
-                "You must provide a matrix in", id,
+                "You must provide data (matrix or data.frame) in", id,
                 "in order to draw {.cls {fclass(object)}} directly"
             ))
         }
-        if (is.null(mat)) {
+        if (is.null(anno_data)) {
+            anno_data <- switch(which,
+                row = heat_matrix,
+                column = t(heat_matrix)
+            )
+        } else if (is.function(anno_data)) {
             mat <- switch(which,
                 row = heat_matrix,
                 column = t(heat_matrix)
             )
-            object@n <- nrow(mat)
-        } else if (is.function(mat)) {
-            data <- switch(which,
-                row = heat_matrix,
-                column = t(heat_matrix)
-            )
-            mat <- tryCatch(
-                build_matrix(mat(data)),
-                function(cnd) {
+            anno_data <- tryCatch(
+                build_anno_data(anno_data(mat)),
+                invalid_class = function(cnd) {
                     cli::cli_abort(paste(
-                        "{.fn @matrix} of {id} must return a {.cls matrix},",
+                        "{.fn @data} of {id} must return a {.cls matrix},",
                         "a simple vector, or a {.cls data.frame}."
                     ))
                 }
             )
-            if (nrow(mat) != nrow(data)) {
+            if (nrow(anno_data) != nrow(mat)) {
                 cli::cli_abort(paste(
-                    "{.fn @matrix} of {id} must a {.cls matrix}",
-                    "with {nrow(mat)} observation{?s}, but the heatmap",
-                    "contain {nrow(data)} for {which} annotation."
+                    "{.fn @data} of {id} return",
+                    "{nrow(anno_data)} observation{?s}, but the heatmap",
+                    "contain {nrow(mat)} for {which} annotation."
                 ))
             }
-            object@n <- nrow(mat)
         }
-        object@matrix <- mat
+        object@n <- nrow(anno_data)
+        object@data <- anno_data
 
         # call `eheat_prepare` to modify object after make_layout ----------
         # for `eheat_prepare`, the actual geom matrix has been added
@@ -413,12 +425,10 @@ methods::setMethod(
         }
         if (missing(index)) {
             if (is.na(object@n)) {
-                cli::cli_abort(
-                    paste(
-                        "You must provide {.arg index} to draw",
-                        "{.cls {fclass(object)}} directly"
-                    )
-                )
+                cli::cli_abort(paste(
+                    "You must provide {.arg index} to draw",
+                    "{.cls {fclass(object)}} directly"
+                ))
             }
             index <- seq_len(object@n)
         }

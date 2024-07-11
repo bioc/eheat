@@ -179,7 +179,7 @@
 #' @name eheat
 eheat <- function(matrix, ...,
                   legends_margin = list(), legends_panel = list()) {
-    matrix <- build_matrix(matrix)
+    matrix <- build_heatmap_matrix(matrix)
     out <- ComplexHeatmap::Heatmap(matrix = matrix, ...)
     out <- methods::as(out, "ExtendedHeatmap")
     out@legends_margin <- legends_margin

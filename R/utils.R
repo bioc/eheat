@@ -39,22 +39,46 @@ imap <- function(.x, .f, ...) {
 
 compact <- function(.x) .x[lengths(.x) > 0L]
 
-build_matrix <- function(matrix, arg = rlang::caller_arg(matrix)) {
+build_heatmap_matrix <- function(matrix, arg = rlang::caller_arg(matrix)) {
     if (inherits(matrix, "data.frame")) {
-        matrix <- as.matrix(matrix)
+        out <- as.matrix(matrix)
     } else if (!is.matrix(matrix)) {
         if (is.atomic(matrix)) {
             cli::cli_alert_info("convert simple vector to one-column matrix")
-            matrix <- matrix(matrix, ncol = 1L)
-            colnames(matrix) <- "V1"
+            out <- matrix(matrix, ncol = 1L)
+            colnames(out) <- "V1"
+            if (rlang::is_named(matrix)) rownames(out) <- names(matrix)
         } else {
             cli::cli_abort(paste(
                 "{.arg {arg}} must be a {.cls matrix},",
                 "a simple vector, or a {.cls data.frame}."
             ))
         }
+    } else {
+        out <- matrix
     }
-    matrix
+    out
+}
+
+build_anno_data <- function(data, arg = rlang::caller_arg(data)) {
+    if (inherits(data, "data.frame")) {
+        out <- data
+    } else if (!is.matrix(data)) {
+        if (is.atomic(data)) {
+            cli::cli_alert_info("convert simple vector to one-column matrix")
+            out <- matrix(data, ncol = 1L)
+            colnames(out) <- "V1"
+            if (rlang::is_named(data)) rownames(out) <- names(data)
+        } else {
+            cli::cli_abort(paste(
+                "{.arg {arg}} must be a {.cls matrix},",
+                "a simple vector, or a {.cls data.frame}."
+            ), class = "invalid_class")
+        }
+    } else {
+        out <- data
+    }
+    out
 }
 
 pindex <- function(array, ...) {

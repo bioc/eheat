@@ -11,35 +11,40 @@
 #' @section ggfn:
 #'
 #' `ggfn` accept a ggplot2 object with a default data and mapping created by
-#' `ggplot(data, aes(.data$x))` / `ggplot(data, ggplot2::aes(y = .data$y))`.
-#' The original matrix will be converted into a long-data.frame (`gganno` always
-#' regard row as the observations) with following columns:
+#' `ggplot(data, aes(.data$x))` / `ggplot(data, ggplot2::aes(y = .data$y))`. 
+#' 
+#' If the original data is a matrix, it'll be reshaped into a long-format
+#' data frame in the `ggplot2` plot data. The final ggplot2 plot data will
+#' contain following columns:
 #' - `.slice`: the slice row (which = `"row"`) or column (which = `"column"`)
 #'   number.
-#' - `.row_names` and `.column_names`: the row and column names of the original
-#'   matrix (only applicable when names exist).
-#' - `.row_index` and `.column_index`: the row and column index of the original
-#'   matrix.
+#' - `.row_names` and `.row_index`: the row names (only applicable when names
+#'   exist) and index of the original data.
+#' - `.column_names` and `.column_index`: the column names (only applicable when
+#'   names exist) and index of the original data (`only applicable when
+#'   the original data is a matrix`).
 #' - `x` / `y`: indicating the x-axis (or y-axis) coordinates. Don't use
 #'   [coord_flip][ggplot2::coord_flip] to flip coordinates as it may disrupt
 #'   internal operations.
-#' - `value`: the actual matrix value of the annotation matrix.
+#' - `value`: the actual matrix value of the annotation matrix (`only applicable
+#'   when the original data is a matrix`).
 #'
 #' @inherit ggheat
 #' @seealso [eanno]
 #' @examples
 #' draw(gganno(function(p) {
 #'     p + geom_point(aes(y = value))
-#' }, matrix = rnorm(10L), height = unit(10, "cm"), width = unit(0.7, "npc")))
+#' }, data = rnorm(10L), height = unit(10, "cm"), width = unit(0.7, "npc")))
 #' @return A `ggAnno` object.
 #' @export
 #' @name gganno
-gganno <- function(ggfn, ..., matrix = NULL,
+gganno <- function(ggfn, ..., data = NULL,
                    which = NULL, width = NULL, height = NULL) {
     out <- eanno(
-        draw_fn = ggfn, ..., matrix = matrix,
+        draw_fn = ggfn, ..., data = data, subset_rule = NULL,
         which = which, width = width, height = height,
-        show_name = FALSE, fun_name = "gganno"
+        show_name = FALSE, fun_name = "gganno",
+        legends_margin = NULL, legends_panel = NULL
     )
     out <- methods::as(out, "ggAnno")
     out
@@ -65,9 +70,9 @@ eheat_prepare.ggAnno <- function(object, ..., viewport, heatmap, name) {
     }
     which <- object@which
     # we always regard matrix row as the observations
-    matrix <- object@matrix
+    data <- object@data
     if (is.null(heatmap)) {
-        order_list <- list(seq_len(nrow(matrix)))
+        order_list <- list(seq_len(nrow(data)))
     } else {
         order_list <- switch(which,
             row = heatmap@row_order_list,
@@ -79,19 +84,25 @@ eheat_prepare.ggAnno <- function(object, ..., viewport, heatmap, name) {
     } else {
         with_slice <- FALSE
     }
-    row_nms <- rownames(matrix)
-    col_nms <- colnames(matrix)
-    data <- as_tibble0(matrix, rownames = NULL) # nolint
-    colnames(data) <- seq_len(ncol(data))
-    data$.row_index <- seq_len(nrow(data))
-    data <- tidyr::pivot_longer(data,
-        cols = !".row_index",
-        names_to = ".column_index",
-        values_to = "value"
-    )
-    data$.column_index <- as.integer(data$.column_index)
-    if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
-    if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
+    if (is.matrix(data)) {
+        row_nms <- rownames(data)
+        col_nms <- colnames(data)
+        data <- as_tibble0(data, rownames = NULL) # nolint
+        colnames(data) <- seq_len(ncol(data))
+        data$.row_index <- seq_len(nrow(data))
+        data <- tidyr::pivot_longer(data,
+            cols = !".row_index",
+            names_to = ".column_index",
+            values_to = "value"
+        )
+        data$.column_index <- as.integer(data$.column_index)
+        if (!is.null(row_nms)) data$.row_names <- row_nms[data$.row_index]
+        if (!is.null(col_nms)) data$.column_names <- col_nms[data$.column_index]
+    } else {
+        row_nms <- rownames(data)
+        data <- as_tibble0(data, rownames = ".row_names")
+        data$.row_index <- seq_len(nrow(data))
+    }
 
     coords <- data_frame0(
         .slice = rep(
@@ -104,7 +115,7 @@ eheat_prepare.ggAnno <- function(object, ..., viewport, heatmap, name) {
     data <- merge(coords, data, by = ".row_index", all = FALSE)
     nms <- c(
         ".slice", ".row_names", ".column_names",
-        ".row_index", ".column_index", "x", "y", "value"
+        ".row_index", ".column_index", "x", "y"
     )
     if (which == "row") {
         data <- rename(data, c(x = "y"))
@@ -118,9 +129,11 @@ eheat_prepare.ggAnno <- function(object, ..., viewport, heatmap, name) {
         } else {
             data$y <- reverse_trans(data$y)
         }
-        p <- ggplot(data[intersect(nms, names(data))], aes(y = .data$y))
+        data <- data[union(intersect(nms, names(data)), names(data))]
+        p <- ggplot(data, aes(y = .data$y))
     } else {
-        p <- ggplot(data[intersect(nms, names(data))], aes(x = .data$x))
+        data <- data[union(intersect(nms, names(data)), names(data))]
+        p <- ggplot(data, aes(x = .data$x))
     }
     p <- rlang::inject(object@fun(p, !!!object@dots))
     object@dots <- list() # remove dots

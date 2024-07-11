@@ -6,7 +6,7 @@
 \alias{ggAnno-class}
 \title{Build ggAnno Class}
 \usage{
-gganno(ggfn, ..., matrix = NULL, which = NULL, width = NULL, height = NULL)
+gganno(ggfn, ..., data = NULL, which = NULL, width = NULL, height = NULL)
 }
 \arguments{
 \item{ggfn}{A function or formula, accept a initial \link[ggplot2:ggplot]{ggplot}
@@ -22,10 +22,9 @@ very compact anonymous functions (lambdas) with up to two inputs.}
 
 \item{...}{Additional arguments passed to \code{ggfn}.}
 
-\item{matrix}{A matrix, if it is a simple vector, it will be converted to a
-one-column matrix. Data.frame will also be coerced into matrix. If \code{NULL},
-the matrix from heatmap will be used. You can also provide a function to
-transform the matrix.}
+\item{data}{A \code{matrix} or \code{data.frame}, if it is a simple vector, it will be
+converted to a one-column matrix. If \code{NULL}, the matrix from the heatmap will
+be used. You can also provide a function to transform the matrix.}
 
 \item{which}{Whether it is drawn as a column annotation or a row annotation?}
 
@@ -53,26 +52,28 @@ Maintaining the internal limits along the heatmap to align well with
 
 \code{ggfn} accept a ggplot2 object with a default data and mapping created by
 \code{ggplot(data, aes(.data$x))} / \code{ggplot(data, ggplot2::aes(y = .data$y))}.
-The original matrix will be converted into a long-data.frame (\code{gganno} always
-regard row as the observations) with following columns:
+
+If the original data is a matrix, it'll be reshaped into a long-format
+data frame in the \code{ggplot2} plot data. The final ggplot2 plot data will
+contain following columns:
 \itemize{
 \item \code{.slice}: the slice row (which = \code{"row"}) or column (which = \code{"column"})
 number.
-\item \code{.row_names} and \code{.column_names}: the row and column names of the original
-matrix (only applicable when names exist).
-\item \code{.row_index} and \code{.column_index}: the row and column index of the original
-matrix.
+\item \code{.row_names} and \code{.row_index}: the row names (only applicable when names
+exist) and index of the original data.
+\item \code{.column_names} and \code{.column_index}: the column names (only applicable when
+names exist) and index of the original data (\verb{only applicable when the original data is a matrix}).
 \item \code{x} / \code{y}: indicating the x-axis (or y-axis) coordinates. Don't use
 \link[ggplot2:coord_flip]{coord_flip} to flip coordinates as it may disrupt
 internal operations.
-\item \code{value}: the actual matrix value of the annotation matrix.
+\item \code{value}: the actual matrix value of the annotation matrix (\verb{only applicable when the original data is a matrix}).
 }
 }
 
 \examples{
 draw(gganno(function(p) {
     p + geom_point(aes(y = value))
-}, matrix = rnorm(10L), height = unit(10, "cm"), width = unit(0.7, "npc")))
+}, data = rnorm(10L), height = unit(10, "cm"), width = unit(0.7, "npc")))
 }
 \seealso{
 \link{eanno}
