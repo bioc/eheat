@@ -505,6 +505,127 @@ dev.off()
 #>   2
 ```
 
+If no data is provided, the heatmap matrix will be used, the same
+principal applied in the matrix (reshaped into a long-format data
+frame). Note: for column annotations, the heatmap matrix will be
+transposed, since `gganno` will always regard row as the observations.
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = NULL,
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    ), which = "column"
+  )
+))
+#>   .slice .row_names .column_names .row_index .column_index x       value
+#> 1      1    column1          row1          1             1 1  0.90474160
+#> 2      1    column1          row2          1             2 1  0.90882972
+#> 3      1    column1          row3          1             3 1  0.28074668
+#> 4      1    column1          row4          1             4 1  0.02729558
+#> 5      1    column1          row5          1             5 1 -0.32552445
+#> 6      1    column1          row6          1             6 1  0.58403269
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  left_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = NULL,
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    ),
+    which = "row"
+  )
+))
+#>   .slice .row_names .column_names .row_index .column_index y      value
+#> 1      1       row1       column6          1             6 2  0.1621522
+#> 2      1       row1       column9          1             9 2 -0.1629658
+#> 3      1       row1       column1          1             1 2  0.9047416
+#> 4      1       row1       column7          1             7 2 -0.2869867
+#> 5      1       row1       column8          1             8 2  0.6803262
+#> 6      1       row1       column4          1             4 2  1.2676994
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
+You can also supply a function (`purrr-lambda` is also okay) in the
+data, which will be applied in the heatmap matrix. Note: for column
+annotations, the heatmap matrix will be transposed before pass into this
+function.
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = function(x) {
+        if (identical(x, small_mat)) {
+          print("matrix not transposed")
+        } else if (identical(x, t(small_mat))) {
+          print("matrix transposed")
+        }
+        rowSums(x)
+      }
+    ),
+    which = "column"
+  )
+))
+#> [1] "matrix transposed"
+#> ℹ convert simple vector to one-column matrix
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  left_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = function(x) {
+        if (identical(x, small_mat)) {
+          print("matrix not transposed")
+        } else if (identical(x, t(small_mat))) {
+          print("matrix transposed")
+        }
+        rowSums(x)
+      }
+    ),
+    which = "row"
+  )
+))
+#> [1] "matrix not transposed"
+#> ℹ convert simple vector to one-column matrix
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
 Similarly, we can leverage the geometric objects (geoms) provided by
 ggplot2 in `ggfn` to create annotation.
 
@@ -856,7 +977,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] eheat_0.99.7          ggplot2_3.5.1         ComplexHeatmap_2.20.0
+#> [1] eheat_0.99.8          ggplot2_3.5.1         ComplexHeatmap_2.20.0
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] utf8_1.2.4          generics_0.1.3      tidyr_1.3.1        

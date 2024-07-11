@@ -11,8 +11,8 @@
 #' @section ggfn:
 #'
 #' `ggfn` accept a ggplot2 object with a default data and mapping created by
-#' `ggplot(data, aes(.data$x))` / `ggplot(data, ggplot2::aes(y = .data$y))`. 
-#' 
+#' `ggplot(data, aes(.data$x))` / `ggplot(data, ggplot2::aes(y = .data$y))`.
+#'
 #' If the original data is a matrix, it'll be reshaped into a long-format
 #' data frame in the `ggplot2` plot data. The final ggplot2 plot data will
 #' contain following columns:
@@ -40,6 +40,7 @@
 #' @name gganno
 gganno <- function(ggfn, ..., data = NULL,
                    which = NULL, width = NULL, height = NULL) {
+    if (missing(ggfn)) ggfn <- ~.x
     out <- eanno(
         draw_fn = ggfn, ..., data = data, subset_rule = NULL,
         which = which, width = width, height = height,

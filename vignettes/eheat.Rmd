@@ -373,6 +373,88 @@ draw(ggheat(small_mat,
 dev.off()
 ```
 
+If no data is provided, the heatmap matrix will be used, the same principal
+applied in the matrix (reshaped into a long-format data frame). Note: for column
+annotations, the heatmap matrix will be transposed, since `gganno` will always
+regard row as the observations.
+```{r anno_data_null_column}
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = NULL,
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    ), which = "column"
+  )
+))
+dev.off()
+```
+
+```{r anno_data_null_row}
+pdf(NULL)
+draw(ggheat(small_mat,
+  left_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = NULL,
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    ),
+    which = "row"
+  )
+))
+dev.off()
+```
+
+You can also supply a function (`purrr-lambda` is also okay) in the data, which
+will be applied in the heatmap matrix. Note: for column annotations, the heatmap
+matrix will be transposed before pass into this function.
+
+```{r anno_data_fun_column}
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = function(x) {
+        if (identical(x, small_mat)) {
+          print("matrix not transposed")
+        } else if (identical(x, t(small_mat))) {
+          print("matrix transposed")
+        }
+        rowSums(x)
+      }
+    ),
+    which = "column"
+  )
+))
+dev.off()
+```
+
+```{r anno_data_fun_row}
+pdf(NULL)
+draw(ggheat(small_mat,
+  left_annotation = HeatmapAnnotation(
+    foo = gganno(
+      data = function(x) {
+        if (identical(x, small_mat)) {
+          print("matrix not transposed")
+        } else if (identical(x, t(small_mat))) {
+          print("matrix transposed")
+        }
+        rowSums(x)
+      }
+    ),
+    which = "row"
+  )
+))
+dev.off()
+```
+
+
 Similarly, we can leverage the geometric objects (geoms) provided by ggplot2 in
 `ggfn` to create annotation. 
 ```{r anno_point}

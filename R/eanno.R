@@ -146,7 +146,7 @@ eanno <- function(draw_fn, ..., data = NULL, which = NULL, subset_rule = NULL,
     anno@dots <- dots
     anno@data <- data
     anno@which <- which
-    anno@fun <- draw_fn
+    anno@fun <- unclass(draw_fn)
     anno@fun_name <- fun_name %||% "eanno"
     anno_size <- anno_width_and_height(which, width, height, unit(1, "cm"))
     anno@width <- anno_size$width
