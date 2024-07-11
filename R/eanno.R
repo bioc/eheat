@@ -193,13 +193,17 @@ eanno <- function(draw_fn, ..., matrix = NULL, which = NULL, subset_rule = NULL,
             } else if (isTRUE(rule)) {
                 # subset element
                 if (inherits(var, c("tbl_df", "data.table"))) {
+                    # For tibble and data.table, no `drop` argument
                     var[i, ]
                 } else if (is.matrix(var) || is.data.frame(var)) {
+                    # For matrix and data.frame
                     var[i, , drop = FALSE]
                 } else if (inherits(var, "gpar")) {
+                    # For gpar object
                     subset_gp(var, i)
                 } else if (is.vector(var) && !is_scalar(var)) {
-                    .subset(var, i)
+                    # other vector object
+                    var[i]
                 }
             } else {
                 rule(var, i)
@@ -418,8 +422,6 @@ methods::setMethod(
             }
             index <- seq_len(object@n)
         }
-        # since `eheat` will initialize `eanno` when preparing the main
-        # heatmap layout. we skip this step.
         # This is only used by ComplexHeatmap::Heatmap function
         # since `eheat` will initialize `eanno` when preparing the main
         # heatmap layout.
@@ -442,9 +444,7 @@ methods::setMethod(
             if (is.null(heatmap) && n > 1L) {
                 cli::cli_abort("Cannot initialize {.cls {object@name}}")
             }
-            # we can only supply heatmap matrix when called from `make_layout`
-            # of heatmap, there is no heatmap matrix when called from draw
-            # directly.
+            # we then initialize this annotation by call `make_layout`
             object <- make_layout(object, heatmap = heatmap)
         }
         # will create a new viewport
