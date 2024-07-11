@@ -10,14 +10,15 @@
 #'
 #' @param ... Additional arguments passed to
 #' [HeatmapAnnotation][ComplexHeatmap::HeatmapAnnotation].
-#' @param annotation_size Height/width of each annotation for column/row
+#' @param annotation_size `Height/width` of each annotation for column/row
 #' annotation.
-#' @param size Height/width of the whole annotations for column/row annotation.
+#' @param size `Height/width` of the whole annotations for column/row
+#' annotation.
 #' @param which A string of `"row"` or `"column"`.
 #' @return A [HeatmapAnnotation][ComplexHeatmap::HeatmapAnnotation-class]
 #' object.
 #' @examples
-#' # No need to specify which argument if combine with `ggheat` or `eheat`
+#' # No need to specify `which` argument if combined with `ggheat` or `eheat`
 #' g <- ggplot(mpg, aes(displ, hwy, colour = class)) +
 #'     geom_point()
 #' m <- matrix(rnorm(100), 10)
@@ -25,7 +26,7 @@
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg(g, "panel",
 #'             clip = "on",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )

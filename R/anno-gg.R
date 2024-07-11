@@ -13,7 +13,7 @@
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg(g, "panel",
 #'             clip = "off",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -24,7 +24,7 @@
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg(g, "panel",
 #'             clip = "on",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -34,7 +34,7 @@
 #' ggheat(m,
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg(g, "plot",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -44,15 +44,14 @@
 #' ggheat(m,
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg(g, "full",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
 #' )
 #' @export
 anno_gg <- function(gg, align_with = "full", clip = NULL, gt = NULL,
-                    width = NULL, height = NULL, show_name = FALSE,
-                    which = NULL) {
+                    size = NULL, show_name = FALSE, which = NULL) {
     if (is.null(gt)) {
         assert_s3_class(gg, "ggplot")
         gt <- ggplot2::ggplotGrob(gg)
@@ -67,7 +66,7 @@ anno_gg <- function(gg, align_with = "full", clip = NULL, gt = NULL,
             margins <- setup_margins(clip, vp)
             .ggfit(gt, align_with, margins)
         },
-        which = which, width = width, height = height,
+        which = which, size = size,
         show_name = show_name, fun_name = "anno_gg"
     )
 }
@@ -78,7 +77,7 @@ anno_gg <- function(gg, align_with = "full", clip = NULL, gt = NULL,
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg2(g, "panel",
 #'             margins = NULL,
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -89,7 +88,7 @@ anno_gg <- function(gg, align_with = "full", clip = NULL, gt = NULL,
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg2(g, "panel",
 #'             margins = "l",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -100,7 +99,7 @@ anno_gg <- function(gg, align_with = "full", clip = NULL, gt = NULL,
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg2(g, "panel",
 #'             margins = "r",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -110,7 +109,7 @@ anno_gg <- function(gg, align_with = "full", clip = NULL, gt = NULL,
 #' ggheat(m,
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg2(g, "plot",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -120,7 +119,7 @@ anno_gg <- function(gg, align_with = "full", clip = NULL, gt = NULL,
 #' ggheat(m,
 #'     top_annotation = eheat_anno(
 #'         ggplot = anno_gg2(g, "full",
-#'             height = unit(6, "cm"),
+#'             size = unit(6, "cm"),
 #'             show_name = FALSE
 #'         )
 #'     )
@@ -133,8 +132,7 @@ anno_gg2 <- function(gg, align_with = "full",
                          "axis", "lab", "guide",
                          "subtitle", "title", "caption"
                      ),
-                     gt = NULL,
-                     width = NULL, height = NULL, show_name = FALSE,
+                     gt = NULL, size = NULL, show_name = FALSE,
                      which = NULL) {
     if (is.null(gt)) {
         assert_s3_class(gg, "ggplot")
@@ -150,7 +148,7 @@ anno_gg2 <- function(gg, align_with = "full",
         function(index, k, n) {
             .ggfit(gt, align_with, margins, elements)
         },
-        which = which, width = width, height = height,
+        which = which, size = size,
         show_name = show_name, fun_name = "anno_gg2"
     )
 }

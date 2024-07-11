@@ -34,16 +34,15 @@
 #' @examples
 #' draw(gganno(function(p) {
 #'     p + geom_point(aes(y = value))
-#' }, data = rnorm(10L), height = unit(10, "cm"), width = unit(0.7, "npc")))
+#' }, data = rnorm(10L), size = unit(10, "cm")))
 #' @return A `ggAnno` object.
 #' @export
 #' @name gganno
-gganno <- function(ggfn, ..., data = NULL,
-                   which = NULL, width = NULL, height = NULL) {
+gganno <- function(ggfn, ..., data = NULL, size = NULL, which = NULL) {
     if (missing(ggfn)) ggfn <- ~.x
     out <- eanno(
         draw_fn = ggfn, ..., data = data, subset_rule = NULL,
-        which = which, width = width, height = height,
+        size = size, which = which,
         show_name = FALSE, fun_name = "gganno",
         legends_margin = NULL, legends_panel = NULL
     )

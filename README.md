@@ -681,7 +681,7 @@ draw(ggheat(small_mat,
       data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
-      }, height = unit(5, "cm")
+      }, size = unit(5, "cm")
     )
   )
 ), merge_legends = TRUE)
@@ -697,7 +697,7 @@ draw(ggheat(small_mat,
       data = anno_data,
       function(p) {
         p + geom_boxplot(aes(y = value, fill = factor(.slice)))
-      }, height = unit(5, "cm")
+      }, size = unit(5, "cm")
     )
   ), column_km = 2L
 ), merge_legends = TRUE)
@@ -739,7 +739,7 @@ draw(ggheat(small_mat,
           scale_color_brewer(
             name = "Slice", type = "qual", palette = "Set1"
           )
-      }, height = unit(3, "cm")
+      }, size = unit(3, "cm")
     )
   ), column_km = 2L
 ), merge_legends = TRUE)
@@ -754,7 +754,7 @@ draw(ggheat(small_mat,
       data = anno_data,
       function(p) {
         p + aes(y = value) + geom_text(aes(label = .row_index))
-      }, height = unit(2, "cm")
+      }, size = unit(2, "cm")
     )
   ),
   bottom_annotation = eheat_anno(
@@ -765,7 +765,7 @@ draw(ggheat(small_mat,
           scale_y_reverse()
       },
       data = anno_data,
-      height = unit(2, "cm")
+      size = unit(2, "cm")
     )
   ),
   right_annotation = eheat_anno(
@@ -775,7 +775,7 @@ draw(ggheat(small_mat,
           geom_text(aes(label = .row_index))
       },
       data = anno_data,
-      width = unit(3, "cm")
+      size = unit(3, "cm")
     )
   ),
   left_annotation = eheat_anno(
@@ -786,7 +786,7 @@ draw(ggheat(small_mat,
           scale_x_reverse()
       },
       data = anno_data,
-      width = unit(3, "cm")
+      size = unit(3, "cm")
     )
   ),
   row_km = 2L, column_km = 2L,
@@ -834,7 +834,7 @@ ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "off",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -849,7 +849,7 @@ ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "on",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -863,7 +863,7 @@ ggheat(m,
 ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg(g, "plot",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -878,7 +878,7 @@ ggheat(m,
 ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg(g, "full",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -896,7 +896,7 @@ ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = NULL,
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -911,7 +911,7 @@ ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "l",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -926,7 +926,7 @@ ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "r",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -940,7 +940,7 @@ ggheat(m,
 ggheat(m,
   top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "plot",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -965,7 +965,7 @@ ggheat(m,
         ncol = 2L
       )),
       align_with = "full",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )

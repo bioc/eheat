@@ -25,6 +25,20 @@
 #' @param data A `matrix` or `data.frame`, if it is a simple vector, it will be
 #' converted to a one-column matrix. If `NULL`, the matrix from the heatmap will
 #' be used. You can also provide a function to transform the matrix.
+#' @param size The `width/height` of the plotting region (the viewport) that the
+#' annotation is drawn. If it is a `row` annotation, `size` is regarded as the
+#' `width`, otherwise, the `height`. `size` must be an absolute
+#' [unit][grid::unit] object.  Since the
+#' [AnnotationFunction][ComplexHeatmap::AnnotationFunction-class] object is
+#' always contained by the
+#' [SingleAnnotation-class][ComplexHeatmap::SingleAnnotation-class] object, you
+#' can only set the `width` of row annotations or `height` of column
+#' annotations, while e.g. the `height` of the row annotation and `width` of the
+#' column annotations is always `unit(1, "npc")` which means it always fully
+#' filled in the parent `SingleAnnotation` and only in
+#' [SingleAnnotation][ComplexHeatmap::SingleAnnotation] or even
+#' [HeatmapAnnotation][ComplexHeatmap::HeatmapAnnotation] can adjust the
+#' `height` of the row annotations or `width` of the column annotations.
 #' @inheritParams ComplexHeatmap::AnnotationFunction
 #' @param subset_rule A list of function to subset variables in `...`.
 #' @param fun_name Name of the annotation function, only used for message.
@@ -54,7 +68,7 @@
 #'         if (k == 1) grid.yaxis()
 #'         popViewport()
 #'     },
-#'     height = unit(2, "cm")
+#'     size = unit(2, "cm")
 #' )
 #' m <- rbind(1:10, 11:20)
 #' eheat(m, top_annotation = eheat_anno(foo = anno))
@@ -70,15 +84,16 @@
 #'         popViewport()
 #'     },
 #'     data = rnorm(10L), subset_rule = TRUE,
-#'     height = unit(2, "cm")
+#'     size = unit(2, "cm")
 #' )
 #' draw(anno)
 #' draw(anno[1:2])
 #' @seealso [AnnotationFunction][ComplexHeatmap::AnnotationFunction]
 #' @return A `ExtendedAnnotation` object.
 #' @export
-eanno <- function(draw_fn, ..., data = NULL, which = NULL, subset_rule = NULL,
-                  width = NULL, height = NULL, show_name = TRUE,
+eanno <- function(draw_fn, ..., data = NULL,
+                  size = NULL, show_name = TRUE, which = NULL,
+                  subset_rule = NULL,
                   legends_margin = NULL, legends_panel = NULL,
                   fun_name = NULL) {
     if (ht_opt$verbose) {
@@ -149,9 +164,9 @@ eanno <- function(draw_fn, ..., data = NULL, which = NULL, subset_rule = NULL,
     anno@which <- which
     anno@fun <- unclass(draw_fn)
     anno@fun_name <- fun_name %||% "eanno"
-    anno_size <- anno_width_and_height(which, width, height, unit(1, "cm"))
-    anno@width <- anno_size$width
-    anno@height <- anno_size$height
+    anno_size <- anno_width_and_height(which, size, unit(1, "cm"))
+    anno@width <- .subset2(anno_size, "width")
+    anno@height <- .subset2(anno_size, "height")
     anno@show_name <- show_name
     anno@n <- n
     anno@data_scale <- c(0L, 1L)
@@ -466,27 +481,15 @@ methods::setMethod(
     }
 )
 
-anno_width_and_height <- function(which, width = NULL, height = NULL,
+anno_width_and_height <- function(which, size = NULL,
                                   default = unit(10, "mm")) {
-    params <- list(width = width, height = height)
+    size <- size %||% default
+    if (!ComplexHeatmap::is_abs_unit(size)) {
+        cli::cli_abort("{.arg size} must be an absolute unit.", )
+    }
     if (which == "row") {
-        # we flip the width and height in this way, both row and column
-        # annotation, height must be absolute unit
-        params <- flip_gp(params)
-        arg <- "width" # nolint
+        list(width = size, height = unit(1L, "npc"))
     } else {
-        arg <- "height"
+        list(width = unit(1L, "npc"), height = size)
     }
-    if (is.null(.subset2(params, "height"))) {
-        params$height <- default
-    } else if (!ComplexHeatmap::is_abs_unit(.subset2(params, "height"))) {
-        cli::cli_abort(paste(
-            "{.arg {arg}} of the {.field {which}} annotation",
-            "must be an absolute unit."
-        ))
-    }
-    if (is.null(.subset2(params, "width"))) {
-        params$width <- unit(1L, "npc")
-    }
-    if (which == "row") flip_gp(params) else params
 }

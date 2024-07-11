@@ -6,7 +6,7 @@
 \alias{ggAnno-class}
 \title{Build ggAnno Class}
 \usage{
-gganno(ggfn, ..., data = NULL, which = NULL, width = NULL, height = NULL)
+gganno(ggfn, ..., data = NULL, size = NULL, which = NULL)
 }
 \arguments{
 \item{ggfn}{A function or formula, accept a initial \link[ggplot2:ggplot]{ggplot}
@@ -26,11 +26,22 @@ very compact anonymous functions (lambdas) with up to two inputs.}
 converted to a one-column matrix. If \code{NULL}, the matrix from the heatmap will
 be used. You can also provide a function to transform the matrix.}
 
+\item{size}{The \code{width/height} of the plotting region (the viewport) that the
+annotation is drawn. If it is a \code{row} annotation, \code{size} is regarded as the
+\code{width}, otherwise, the \code{height}. \code{size} must be an absolute
+\link[grid:unit]{unit} object.  Since the
+\link[ComplexHeatmap:AnnotationFunction-class]{AnnotationFunction} object is
+always contained by the
+\link[ComplexHeatmap:SingleAnnotation-class]{SingleAnnotation-class} object, you
+can only set the \code{width} of row annotations or \code{height} of column
+annotations, while e.g. the \code{height} of the row annotation and \code{width} of the
+column annotations is always \code{unit(1, "npc")} which means it always fully
+filled in the parent \code{SingleAnnotation} and only in
+\link[ComplexHeatmap:SingleAnnotation]{SingleAnnotation} or even
+\link[ComplexHeatmap:HeatmapAnnotation]{HeatmapAnnotation} can adjust the
+\code{height} of the row annotations or \code{width} of the column annotations.}
+
 \item{which}{Whether it is drawn as a column annotation or a row annotation?}
-
-\item{width}{The width of the plotting region (the viewport) that the annotation is drawn. If it is a row annotation, the width must be an absolute unit. Since the \code{AnnotationFunction} object is always contained by the \code{\link[ComplexHeatmap]{SingleAnnotation-class}}object, you can only set the width of row annotations or height of column annotations, while e.g. the height of the row annotation is always \code{unit(1, "npc")} which means it always fully filled in the parent \code{SingleAnnotation} and only in \code{\link[ComplexHeatmap]{SingleAnnotation}} or even \code{\link[ComplexHeatmap]{HeatmapAnnotation}} can adjust the height of the row annotations.}
-
-\item{height}{The height of the plotting region (the viewport) that the annotation is drawn. If it is a column annotation, the width must be an absolute unit.}
 }
 \value{
 A \code{ggAnno} object.
@@ -73,7 +84,7 @@ internal operations.
 \examples{
 draw(gganno(function(p) {
     p + geom_point(aes(y = value))
-}, data = rnorm(10L), height = unit(10, "cm"), width = unit(0.7, "npc")))
+}, data = rnorm(10L), size = unit(10, "cm")))
 }
 \seealso{
 \link{eanno}

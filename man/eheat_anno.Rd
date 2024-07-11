@@ -10,10 +10,11 @@ eheat_anno(..., annotation_size = NULL, size = NULL, which = NULL)
 \item{...}{Additional arguments passed to
 \link[ComplexHeatmap:HeatmapAnnotation]{HeatmapAnnotation}.}
 
-\item{annotation_size}{Height/width of each annotation for column/row
+\item{annotation_size}{\code{Height/width} of each annotation for column/row
 annotation.}
 
-\item{size}{Height/width of the whole annotations for column/row annotation.}
+\item{size}{\code{Height/width} of the whole annotations for column/row
+annotation.}
 
 \item{which}{A string of \code{"row"} or \code{"column"}.}
 }
@@ -39,7 +40,7 @@ ggheat(m,
     top_annotation = eheat_anno(
         ggplot = anno_gg(g, "panel",
             clip = "on",
-            height = unit(6, "cm"),
+            size = unit(6, "cm"),
             show_name = FALSE
         )
     )

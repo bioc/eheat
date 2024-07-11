@@ -1153,7 +1153,7 @@ them into <code>annotation_legend_list</code> argument.</p>
 <span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>      <span class="at">data =</span> anno_data,</span>
 <span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a>      <span class="cf">function</span>(p) {</span>
 <span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a>        p <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> value, <span class="at">fill =</span> <span class="fu">factor</span>(.row_index)), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>)</span>
-<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a>      }, <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">5</span>, <span class="st">&quot;cm&quot;</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a>      }, <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">5</span>, <span class="st">&quot;cm&quot;</span>)</span>
 <span id="cb38-8"><a href="#cb38-8" tabindex="-1"></a>    )</span>
 <span id="cb38-9"><a href="#cb38-9" tabindex="-1"></a>  )</span>
 <span id="cb38-10"><a href="#cb38-10" tabindex="-1"></a>), <span class="at">merge_legends =</span> <span class="cn">TRUE</span>)</span>
@@ -1166,7 +1166,7 @@ them into <code>annotation_legend_list</code> argument.</p>
 <span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a>      <span class="at">data =</span> anno_data,</span>
 <span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a>      <span class="cf">function</span>(p) {</span>
 <span id="cb39-6"><a href="#cb39-6" tabindex="-1"></a>        p <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> value, <span class="at">fill =</span> <span class="fu">factor</span>(.slice)))</span>
-<span id="cb39-7"><a href="#cb39-7" tabindex="-1"></a>      }, <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">5</span>, <span class="st">&quot;cm&quot;</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" tabindex="-1"></a>      }, <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">5</span>, <span class="st">&quot;cm&quot;</span>)</span>
 <span id="cb39-8"><a href="#cb39-8" tabindex="-1"></a>    )</span>
 <span id="cb39-9"><a href="#cb39-9" tabindex="-1"></a>  ), <span class="at">column_km =</span> <span class="dv">2</span><span class="dt">L</span></span>
 <span id="cb39-10"><a href="#cb39-10" tabindex="-1"></a>), <span class="at">merge_legends =</span> <span class="cn">TRUE</span>)</span>
@@ -1205,7 +1205,7 @@ them into <code>annotation_legend_list</code> argument.</p>
 <span id="cb40-30"><a href="#cb40-30" tabindex="-1"></a>          <span class="fu">scale_color_brewer</span>(</span>
 <span id="cb40-31"><a href="#cb40-31" tabindex="-1"></a>            <span class="at">name =</span> <span class="st">&quot;Slice&quot;</span>, <span class="at">type =</span> <span class="st">&quot;qual&quot;</span>, <span class="at">palette =</span> <span class="st">&quot;Set1&quot;</span></span>
 <span id="cb40-32"><a href="#cb40-32" tabindex="-1"></a>          )</span>
-<span id="cb40-33"><a href="#cb40-33" tabindex="-1"></a>      }, <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>)</span>
+<span id="cb40-33"><a href="#cb40-33" tabindex="-1"></a>      }, <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>)</span>
 <span id="cb40-34"><a href="#cb40-34" tabindex="-1"></a>    )</span>
 <span id="cb40-35"><a href="#cb40-35" tabindex="-1"></a>  ), <span class="at">column_km =</span> <span class="dv">2</span><span class="dt">L</span></span>
 <span id="cb40-36"><a href="#cb40-36" tabindex="-1"></a>), <span class="at">merge_legends =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
@@ -1217,7 +1217,7 @@ them into <code>annotation_legend_list</code> argument.</p>
 <span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>      <span class="at">data =</span> anno_data,</span>
 <span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>      <span class="cf">function</span>(p) {</span>
 <span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>        p <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">y =</span> value) <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> .row_index))</span>
-<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>      }, <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&quot;cm&quot;</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>      }, <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&quot;cm&quot;</span>)</span>
 <span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a>    )</span>
 <span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a>  ),</span>
 <span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a>  <span class="at">bottom_annotation =</span> <span class="fu">eheat_anno</span>(</span>
@@ -1228,7 +1228,7 @@ them into <code>annotation_legend_list</code> argument.</p>
 <span id="cb41-15"><a href="#cb41-15" tabindex="-1"></a>          <span class="fu">scale_y_reverse</span>()</span>
 <span id="cb41-16"><a href="#cb41-16" tabindex="-1"></a>      },</span>
 <span id="cb41-17"><a href="#cb41-17" tabindex="-1"></a>      <span class="at">data =</span> anno_data,</span>
-<span id="cb41-18"><a href="#cb41-18" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&quot;cm&quot;</span>)</span>
+<span id="cb41-18"><a href="#cb41-18" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&quot;cm&quot;</span>)</span>
 <span id="cb41-19"><a href="#cb41-19" tabindex="-1"></a>    )</span>
 <span id="cb41-20"><a href="#cb41-20" tabindex="-1"></a>  ),</span>
 <span id="cb41-21"><a href="#cb41-21" tabindex="-1"></a>  <span class="at">right_annotation =</span> <span class="fu">eheat_anno</span>(</span>
@@ -1238,7 +1238,7 @@ them into <code>annotation_legend_list</code> argument.</p>
 <span id="cb41-25"><a href="#cb41-25" tabindex="-1"></a>          <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> .row_index))</span>
 <span id="cb41-26"><a href="#cb41-26" tabindex="-1"></a>      },</span>
 <span id="cb41-27"><a href="#cb41-27" tabindex="-1"></a>      <span class="at">data =</span> anno_data,</span>
-<span id="cb41-28"><a href="#cb41-28" tabindex="-1"></a>      <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>)</span>
+<span id="cb41-28"><a href="#cb41-28" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>)</span>
 <span id="cb41-29"><a href="#cb41-29" tabindex="-1"></a>    )</span>
 <span id="cb41-30"><a href="#cb41-30" tabindex="-1"></a>  ),</span>
 <span id="cb41-31"><a href="#cb41-31" tabindex="-1"></a>  <span class="at">left_annotation =</span> <span class="fu">eheat_anno</span>(</span>
@@ -1249,7 +1249,7 @@ them into <code>annotation_legend_list</code> argument.</p>
 <span id="cb41-36"><a href="#cb41-36" tabindex="-1"></a>          <span class="fu">scale_x_reverse</span>()</span>
 <span id="cb41-37"><a href="#cb41-37" tabindex="-1"></a>      },</span>
 <span id="cb41-38"><a href="#cb41-38" tabindex="-1"></a>      <span class="at">data =</span> anno_data,</span>
-<span id="cb41-39"><a href="#cb41-39" tabindex="-1"></a>      <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>)</span>
+<span id="cb41-39"><a href="#cb41-39" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>)</span>
 <span id="cb41-40"><a href="#cb41-40" tabindex="-1"></a>    )</span>
 <span id="cb41-41"><a href="#cb41-41" tabindex="-1"></a>  ),</span>
 <span id="cb41-42"><a href="#cb41-42" tabindex="-1"></a>  <span class="at">row_km =</span> <span class="dv">2</span><span class="dt">L</span>, <span class="at">column_km =</span> <span class="dv">2</span><span class="dt">L</span>,</span>
@@ -1290,7 +1290,7 @@ ComplexHeatmap annotation area.</p>
 <span id="cb43-7"><a href="#cb43-7" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb43-8"><a href="#cb43-8" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg</span>(g, <span class="st">&quot;panel&quot;</span>,</span>
 <span id="cb43-9"><a href="#cb43-9" tabindex="-1"></a>      <span class="at">clip =</span> <span class="st">&quot;off&quot;</span>,</span>
-<span id="cb43-10"><a href="#cb43-10" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb43-10"><a href="#cb43-10" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb43-11"><a href="#cb43-11" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb43-12"><a href="#cb43-12" tabindex="-1"></a>    )</span>
 <span id="cb43-13"><a href="#cb43-13" tabindex="-1"></a>  )</span>
@@ -1302,7 +1302,7 @@ ComplexHeatmap annotation area.</p>
 <span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg</span>(g, <span class="st">&quot;panel&quot;</span>,</span>
 <span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a>      <span class="at">clip =</span> <span class="st">&quot;on&quot;</span>,</span>
-<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb44-7"><a href="#cb44-7" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb44-8"><a href="#cb44-8" tabindex="-1"></a>    )</span>
 <span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a>  )</span>
@@ -1313,7 +1313,7 @@ ComplexHeatmap annotation area.</p>
 <span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a><span class="fu">ggheat</span>(m,</span>
 <span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg</span>(g, <span class="st">&quot;plot&quot;</span>,</span>
-<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb45-6"><a href="#cb45-6" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb45-7"><a href="#cb45-7" tabindex="-1"></a>    )</span>
 <span id="cb45-8"><a href="#cb45-8" tabindex="-1"></a>  )</span>
@@ -1325,7 +1325,7 @@ ComplexHeatmap annotation area.</p>
 <span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a><span class="fu">ggheat</span>(m,</span>
 <span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg</span>(g, <span class="st">&quot;full&quot;</span>,</span>
-<span id="cb46-6"><a href="#cb46-6" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb46-6"><a href="#cb46-6" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb46-7"><a href="#cb46-7" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb46-8"><a href="#cb46-8" tabindex="-1"></a>    )</span>
 <span id="cb46-9"><a href="#cb46-9" tabindex="-1"></a>  )</span>
@@ -1340,7 +1340,7 @@ the clip feature.</p>
 <span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg2</span>(g, <span class="st">&quot;panel&quot;</span>,</span>
 <span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>      <span class="at">margins =</span> <span class="cn">NULL</span>,</span>
-<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb47-7"><a href="#cb47-7" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb47-8"><a href="#cb47-8" tabindex="-1"></a>    )</span>
 <span id="cb47-9"><a href="#cb47-9" tabindex="-1"></a>  )</span>
@@ -1352,7 +1352,7 @@ the clip feature.</p>
 <span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg2</span>(g, <span class="st">&quot;panel&quot;</span>,</span>
 <span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>      <span class="at">margins =</span> <span class="st">&quot;l&quot;</span>,</span>
-<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a>    )</span>
 <span id="cb48-9"><a href="#cb48-9" tabindex="-1"></a>  )</span>
@@ -1364,7 +1364,7 @@ the clip feature.</p>
 <span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg2</span>(g, <span class="st">&quot;panel&quot;</span>,</span>
 <span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a>      <span class="at">margins =</span> <span class="st">&quot;r&quot;</span>,</span>
-<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>    )</span>
 <span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a>  )</span>
@@ -1375,7 +1375,7 @@ the clip feature.</p>
 <span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a><span class="fu">ggheat</span>(m,</span>
 <span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a>  <span class="at">top_annotation =</span> <span class="fu">eheat_anno</span>(</span>
 <span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a>    <span class="at">ggplot =</span> <span class="fu">anno_gg2</span>(g, <span class="st">&quot;plot&quot;</span>,</span>
-<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>    )</span>
 <span id="cb50-8"><a href="#cb50-8" tabindex="-1"></a>  )</span>
@@ -1397,7 +1397,7 @@ the clip feature.</p>
 <span id="cb51-13"><a href="#cb51-13" tabindex="-1"></a>        <span class="at">ncol =</span> <span class="dv">2</span><span class="dt">L</span></span>
 <span id="cb51-14"><a href="#cb51-14" tabindex="-1"></a>      )),</span>
 <span id="cb51-15"><a href="#cb51-15" tabindex="-1"></a>      <span class="at">align_with =</span> <span class="st">&quot;full&quot;</span>,</span>
-<span id="cb51-16"><a href="#cb51-16" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb51-16"><a href="#cb51-16" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>),</span>
 <span id="cb51-17"><a href="#cb51-17" tabindex="-1"></a>      <span class="at">show_name =</span> <span class="cn">FALSE</span></span>
 <span id="cb51-18"><a href="#cb51-18" tabindex="-1"></a>    )</span>
 <span id="cb51-19"><a href="#cb51-19" tabindex="-1"></a>  )</span>

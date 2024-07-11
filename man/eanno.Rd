@@ -10,11 +10,10 @@ eanno(
   draw_fn,
   ...,
   data = NULL,
+  size = NULL,
+  show_name = TRUE,
   which = NULL,
   subset_rule = NULL,
-  width = NULL,
-  height = NULL,
-  show_name = TRUE,
   legends_margin = NULL,
   legends_panel = NULL,
   fun_name = NULL
@@ -48,15 +47,26 @@ can be subsettable.}
 converted to a one-column matrix. If \code{NULL}, the matrix from the heatmap will
 be used. You can also provide a function to transform the matrix.}
 
+\item{size}{The \code{width/height} of the plotting region (the viewport) that the
+annotation is drawn. If it is a \code{row} annotation, \code{size} is regarded as the
+\code{width}, otherwise, the \code{height}. \code{size} must be an absolute
+\link[grid:unit]{unit} object.  Since the
+\link[ComplexHeatmap:AnnotationFunction-class]{AnnotationFunction} object is
+always contained by the
+\link[ComplexHeatmap:SingleAnnotation-class]{SingleAnnotation-class} object, you
+can only set the \code{width} of row annotations or \code{height} of column
+annotations, while e.g. the \code{height} of the row annotation and \code{width} of the
+column annotations is always \code{unit(1, "npc")} which means it always fully
+filled in the parent \code{SingleAnnotation} and only in
+\link[ComplexHeatmap:SingleAnnotation]{SingleAnnotation} or even
+\link[ComplexHeatmap:HeatmapAnnotation]{HeatmapAnnotation} can adjust the
+\code{height} of the row annotations or \code{width} of the column annotations.}
+
+\item{show_name}{It is used to turn off the drawing of annotation names in \code{\link[ComplexHeatmap]{HeatmapAnnotation}}. Annotations always have names associated and normally they will be drawn beside the annotation graphics to tell what the annotation is about. e.g. the annotation names put beside the points annotation graphics. However, for some of the annotations, the names are not necessarily to be drawn, such as text annotations drawn by \code{\link[ComplexHeatmap]{anno_text}} or an empty annotation drawn by \code{\link[ComplexHeatmap]{anno_empty}}. In this case, when \code{show_names} is set to \code{FALSE}, there will be no annotation names drawn for the annotation.}
+
 \item{which}{Whether it is drawn as a column annotation or a row annotation?}
 
 \item{subset_rule}{A list of function to subset variables in \code{...}.}
-
-\item{width}{The width of the plotting region (the viewport) that the annotation is drawn. If it is a row annotation, the width must be an absolute unit. Since the \code{AnnotationFunction} object is always contained by the \code{\link[ComplexHeatmap]{SingleAnnotation-class}}object, you can only set the width of row annotations or height of column annotations, while e.g. the height of the row annotation is always \code{unit(1, "npc")} which means it always fully filled in the parent \code{SingleAnnotation} and only in \code{\link[ComplexHeatmap]{SingleAnnotation}} or even \code{\link[ComplexHeatmap]{HeatmapAnnotation}} can adjust the height of the row annotations.}
-
-\item{height}{The height of the plotting region (the viewport) that the annotation is drawn. If it is a column annotation, the width must be an absolute unit.}
-
-\item{show_name}{It is used to turn off the drawing of annotation names in \code{\link[ComplexHeatmap]{HeatmapAnnotation}}. Annotations always have names associated and normally they will be drawn beside the annotation graphics to tell what the annotation is about. e.g. the annotation names put beside the points annotation graphics. However, for some of the annotations, the names are not necessarily to be drawn, such as text annotations drawn by \code{\link[ComplexHeatmap]{anno_text}} or an empty annotation drawn by \code{\link[ComplexHeatmap]{anno_empty}}. In this case, when \code{show_names} is set to \code{FALSE}, there will be no annotation names drawn for the annotation.}
 
 \item{legends_margin, legends_panel}{A list of
 \link[ComplexHeatmap:Legends-class]{Legends} objects. \code{legends_margin} will be
@@ -94,7 +104,7 @@ anno <- eanno(
         if (k == 1) grid.yaxis()
         popViewport()
     },
-    height = unit(2, "cm")
+    size = unit(2, "cm")
 )
 m <- rbind(1:10, 11:20)
 eheat(m, top_annotation = eheat_anno(foo = anno))
@@ -110,7 +120,7 @@ anno <- eanno(
         popViewport()
     },
     data = rnorm(10L), subset_rule = TRUE,
-    height = unit(2, "cm")
+    size = unit(2, "cm")
 )
 draw(anno)
 draw(anno[1:2])
