@@ -21,7 +21,7 @@
 
 这个包用作 [ggplot2](https://ggplot2.tidyverse.org/) 和
 [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap) 之间的桥梁。
-基本上，通过 `eheat` 包，可以利用所有的 ggplot2 几何形状和操作在 ComplexHeatmap 中运用，除了面板操作（不应该在 `eheat` 包中进行）。幸运的是，ComplexHeatmap 能够独立处理这些操作，因此它们是不必要的。
+基本上，通过 `eheat` 包，可以在 ComplexHeatmap 中利用所有的 ggplot2 geoms以及其他操作，除了facet面板操作（在 `eheat` 包也不应该进行ggplot2 facet操作）。幸运的是，ComplexHeatmap 能够很好地处理这些操作。
 
 ## 安装
 
@@ -126,10 +126,6 @@ draw(ggheat(small_mat))
 - `x` 和 `y`：`x` 和 `y` 坐标
 
 - `value`：热图矩阵的实际值。
-
-## 翻译 private_upload/2024-07-11-07-09-27/README.md.part-1.md
-
-这是一个Markdown文件，请将其翻译成中文，不要修改任何现有的Markdown命令：
 
 ``` r
 pdf(NULL)
