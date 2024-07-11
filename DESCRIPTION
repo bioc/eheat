@@ -1,6 +1,6 @@
 Package: eheat
 Title: Extended ComplexHeatmap
-Version: 0.99.8
+Version: 0.99.9
 Authors@R: 
     c(
         person("Yun", "Peng", , "yunyunp96@163.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2801-3332")),
