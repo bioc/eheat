@@ -188,6 +188,9 @@ eheat_prepare.ggHeatmap <- function(object, ...) {
         p <- p + scales$column[[1L]] + scales$row[[1L]]
     }
 
+    # we always prevent the ComplexHeatmap Heatmap body legend.
+    object@heatmap_param$show_heatmap_legend <- FALSE
+
     # if user provided `ggfn` or rect_gp$type is not none,
     # we should do something with `ggfn`
     if (is.null(object@ggfn) && identical(rect_gp$type, "none")) {
@@ -247,7 +250,5 @@ eheat_prepare.ggHeatmap <- function(object, ...) {
     object@legends_panel <- get_guides(gt, margins = "i")
     object@legends_margin <- get_guides(gt)
 
-    # we always prevent the ComplexHeatmap Heatmap body legend.
-    object@heatmap_param$show_heatmap_legend <- FALSE
     object
 }
