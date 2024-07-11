@@ -191,11 +191,11 @@ draw(
       geom_tile(
         aes(fill = value),
         width = 1L, height = 1L,
-        data = ~ dplyr::filter(p$data, y <= x)
+        data = ~ dplyr::filter(.x, y <= x)
       ) +
       geom_text(
         aes(label = sprintf("%d * %d", .row_index, .column_index)),
-        data = ~ dplyr::filter(p$data, y >= x)
+        data = ~ dplyr::filter(.x, y >= x)
       ) +
       theme_bw()
   }, rect_gp = gpar(type = "none"))
@@ -584,7 +584,7 @@ ggheat(m,
 )
 ```
 
-## sessionInfo
+## Session information
 ```{r}
 sessionInfo()
 ```

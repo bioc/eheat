@@ -4,7 +4,7 @@
   - [`ggheat`](#ggheat)
   - [`gganno`](#gganno)
   - [`anno_gg` and `anno_gg2`](#anno_gg-and-anno_gg2)
-  - [sessionInfo](#sessioninfo)
+  - [Session information](#session-information)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -252,11 +252,11 @@ draw(
       geom_tile(
         aes(fill = value),
         width = 1L, height = 1L,
-        data = ~ dplyr::filter(p$data, y <= x)
+        data = ~ dplyr::filter(.x, y <= x)
       ) +
       geom_text(
         aes(label = sprintf("%d * %d", .row_index, .column_index)),
-        data = ~ dplyr::filter(p$data, y >= x)
+        data = ~ dplyr::filter(.x, y >= x)
       ) +
       theme_bw()
   }, rect_gp = gpar(type = "none"))
@@ -720,7 +720,7 @@ ggheat(m,
 
 <img src="man/figures/README-anno_gg2-full-1.png" width="100%" />
 
-## sessionInfo
+## Session information
 
 ``` r
 sessionInfo()
@@ -749,13 +749,13 @@ sessionInfo()
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] utf8_1.2.4          generics_0.1.3      tidyr_1.3.1        
-#>  [4] shape_1.4.6.1       digest_0.6.35       magrittr_2.0.3     
+#>  [4] shape_1.4.6.1       digest_0.6.36       magrittr_2.0.3     
 #>  [7] evaluate_0.24.0     RColorBrewer_1.1-3  iterators_1.0.14   
 #> [10] circlize_0.4.16     fastmap_1.2.0       foreach_1.5.2      
 #> [13] doParallel_1.0.17   GlobalOptions_0.1.2 purrr_1.0.2        
 #> [16] fansi_1.0.6         viridisLite_0.4.2   scales_1.3.0       
-#> [19] codetools_0.2-20    cli_3.6.2           rlang_1.1.4        
-#> [22] crayon_1.5.2        munsell_0.5.1       withr_3.0.0        
+#> [19] codetools_0.2-20    cli_3.6.3           rlang_1.1.4        
+#> [22] crayon_1.5.3        munsell_0.5.1       withr_3.0.0        
 #> [25] yaml_2.3.8          ggh4x_0.2.8         tools_4.4.0        
 #> [28] parallel_4.4.0      dplyr_1.1.4         colorspace_2.1-0   
 #> [31] GetoptLong_1.0.5    BiocGenerics_0.50.0 vctrs_0.6.5        
