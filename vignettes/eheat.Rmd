@@ -461,7 +461,7 @@ Similarly, we can leverage the geometric objects (geoms) provided by ggplot2 in
 `ggfn` to create annotation. 
 ```{r anno_point}
 anno_data <- sample(1:10, nrow(small_mat))
-with_ht_verbose(draw(ggheat(small_mat,
+draw(ggheat(small_mat,
   top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
@@ -470,7 +470,7 @@ with_ht_verbose(draw(ggheat(small_mat,
       }
     )
   )
-)))
+))
 ```
 
 Legends will also be extracted, in the similar manner like passing them into

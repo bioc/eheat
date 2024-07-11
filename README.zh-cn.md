@@ -41,26 +41,6 @@ pak::pkg_install("Yunuuuu/eheat")
 
 ``` r
 library(eheat)
-#> Loading required package: ComplexHeatmap
-#> Loading required package: grid
-#> ========================================
-#> ComplexHeatmap version 2.20.0
-#> Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
-#> Github page: https://github.com/jokergoo/ComplexHeatmap
-#> Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
-#> 
-#> If you use it in published research, please cite either one:
-#> - Gu, Z. Complex Heatmap Visualization. iMeta 2022.
-#> - Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
-#>     genomic data. Bioinformatics 2016.
-#> 
-#> 
-#> The new InteractiveComplexHeatmap package can directly export static 
-#> complex heatmaps into an interactive Shiny app with zero effort. Have a try!
-#> 
-#> This message can be suppressed by:
-#>   suppressPackageStartupMessages(library(ComplexHeatmap))
-#> ========================================
 #> Loading required package: ggplot2
 ```
 
@@ -99,11 +79,12 @@ colnames(mat) <- paste0("第", seq_len(nc), "列")
 small_mat <- mat[1:9, 1:9]
 ```
 
-`eheat` 包的核心函数是 `ggheat` 和 `gganno`。这两个函数包含了所有必要的功能。`ggheat` 作为 `ComplexHeatmap::Heatmap` 函数的替代，而 `gganno` 则替换了 ComplexHeatmap 包中的所有 `anno_*` 函数，为我们的要求提供了一个全面的解决方案。在 ComplexHeatmap 中使用 ggplot2 的一个重要优势是绘制统计注释的简易性。另一个好处是图例可以直接从 ggplot2 图中提取，省去了手动添加图例的步骤。
+`eheat`包的核心组件是`ggheat`和`gganno`函数，它们包含所有必要的功能。`ggheat`函数作为`ComplexHeatmap::Heatmap`函数的替代，而`gganno`替代了`ComplexHeatmap`包中的`anno_*`函数，为我们的需求提供了全面的解决方案。在`ComplexHeatmap`中使用`ggplot2`的一个重要优点是能够轻松地绘制统计注释。另一个好处是图例可以从`ggplot2`对象中提取出来，省去手动添加图例的需要。此外，`eheat`包还提供`eheat_anno`函数，它是`HeatmapAnnotation`函数的对应函数。当与`ggheat`函数一起使用时，该函数具有自动猜测`which`参数的优点。
+
 
 ## `ggheat`
 
-使用 `ggheat`，创建一个简单的热图很容易。默认的颜色映射在 ComplexHeatmap 和 ggplot2 之间不一致。
+使用`ggheat`，创建一个简单的热图非常容易。默认的颜色映射在ComplexHeatmap和ggplot2之间不一致。
 
 ``` r
 draw(ggheat(small_mat))
@@ -111,19 +92,19 @@ draw(ggheat(small_mat))
 
 <img src="man/figures/README-ggheat-1.png" width="100%" />
 
-您不需要显式指定颜色映射，因为您可以直接使用 ggplot2 中的 `scale_*` 函数。所有导航图例都将直接从 `ggplot2` 中提取。`ggheat` 的关键参数是 `ggfn`，它接受一个 ggplot2 对象，该对象具有由 `ggplot(data, aes(.data$x, .data$y))` 创建的默认数据和映射。数据包含以下列：
+您不需要显式指定颜色映射，因为可以直接使用ggplot2中的`scale_*`函数。所有的导航图例都将直接从`ggplot2`中提取出来。`ggheat`的核心参数是`ggfn`，它接受一个具有默认数据和映射的ggplot2对象，该对象由`ggplot(data, aes(.data$x, .data$y))`创建。数据包含以下列：
 
-- `.slice`：切片编号，由 `.slice_row` 和 `.slice_column` 组合而成。
+- `.slice`：切片编号，将`.slice_row`和`.slice_column`组合起来。
 
 - `.slice_row`：切片的行号
 
 - `.slice_column`：切片的列号
 
-- `.row_names` 和 `.column_names`：原始矩阵的行和列名称（仅当存在名称时适用）。
+- `.row_names` 和 `.column_names`：原矩阵的行和列名称（仅当存在名称时适用）。
 
-- `.row_index` 和 `.column_index`：原始矩阵的行和列索引。
+- `.row_index` 和 `.column_index`：原矩阵的行和列索引。
 
-- `x` 和 `y`：`x` 和 `y` 坐标
+- `x` 和 `y`：`x`和`y`坐标
 
 - `value`：热图矩阵的实际值。
 
@@ -147,19 +128,16 @@ draw(ggheat(small_mat, function(x) {
 #> 4             4 2 2  1.2676994
 #> 5             5 3 2  0.8251229
 #> 6             6 7 2  0.1621522
-```
-
-``` r
 dev.off()
 #> png 
 #>   2
 ```
 
-ggplot2中的`scale_*`函数的丰富性使得修改颜色映射变得很容易。
+富有的 `scale_*` 函数在 ggplot2 中使修改颜色映射变得容易。
 
 ``` r
 draw(ggheat(small_mat, function(p) {
-  # 将使用零作为中点
+  # 将使用零点作为中点
   p + scale_fill_gradient2()
 }))
 ```
@@ -174,7 +152,7 @@ draw(ggheat(small_mat, function(p) {
 
 <img src="man/figures/README-ggheat_scale2-1.png" width="100%" />
 
-图例可以通过ggplot2中的`guide_*`函数进行控制。
+图例可以通过 ggplot2 中的 `guide_*` 函数进行控制。
 
 ``` r
 draw(ggheat(small_mat, function(p) {
@@ -197,7 +175,7 @@ draw(
 
 <img src="man/figures/README-ggheat_geom-1.png" width="100%" />
 
-您也可以使用ComplexHeatmap中的相同方法，通过设置`rect_gp = gpar(type = "none")`来防止内部矩形填充。聚类仍然应用于热图，但在热图正文上没有绘制任何内容。
+您也可以使用 ComplexHeatmap 中的相同方式，通过设置 `rect_gp = gpar(type = "none")` 来防止内部矩形填充。聚类仍然应用，但在热图主体上不绘制任何内容。
 
 ``` r
 draw(ggheat(small_mat, rect_gp = gpar(type = "none")))
@@ -205,7 +183,7 @@ draw(ggheat(small_mat, rect_gp = gpar(type = "none")))
 
 <img src="man/figures/README-blank_rect-1.png" width="100%" />
 
-请注意，ggplot2和ComplexHeatmap之间的背景不同。然而，ggplot2中的主题系统使得修改和自定义背景变得容易。
+请注意 ggplot2 和 ComplexHeatmap 之间的背景是不同的。然而，ggplot2 中的主题系统使得修改和自定义背景变得容易。
 
 ``` r
 draw(
@@ -219,7 +197,7 @@ draw(
 
 <img src="man/figures/README-ggheat_background-1.png" width="100%" />
 
-您可以轻松使用`geom_tile`自定义热图填充。
+您可以使用 `geom_tile` 轻松自定义热图填充。
 
 ``` r
 draw(
@@ -241,7 +219,7 @@ draw(
 
 <img src="man/figures/README-ggheat_customize_rect-1.png" width="100%" />
 
-可以直接使用`ComplexHeatmap::Heatmap`函数的所有功能。
+`ComplexHeatmap::Heatmap` 函数的所有功能都可以直接使用。
 
 ``` r
 draw(ggheat(small_mat, function(p) {
@@ -269,13 +247,13 @@ draw(ggheat(small_mat, function(p) {
 
 <img src="man/figures/README-Heatmap_arg3-1.png" width="100%" />
 
-我们可以将ComplexHeatmap中的`layer_fun`或`cell_fun`与`ggfn`结合使用
+我们可以将 ComplexHeatmap 的 `layer_fun` 或 `cell_fun` 与 `ggfn` 结合使用
 
 ``` r
 draw(
   ggheat(small_mat,
     layer_fun = function(...) {
-      grid.rect(gp = gpar(lwd = 2, fill = "transparent", col = "red"))
+      grid::grid.rect(gp = gpar(lwd = 2, fill = "transparent", col = "red"))
     }, column_km = 2L, row_km = 3
   )
 )
@@ -283,7 +261,7 @@ draw(
 
 <img src="man/figures/README-Heatmap_arg4-1.png" width="100%" />
 
-`ggheat`仅接管热图正文和图例。行名称和列名称由`ComplexHeatmap::Heatmap`函数控制。
+`ggheat` 只会接管热图主体和图例。行名和列名由 `ComplexHeatmap::Heatmap` 函数控制。
 
 ``` r
 draw(ggheat(small_mat, function(p) {
@@ -293,28 +271,102 @@ draw(ggheat(small_mat, function(p) {
 
 <img src="man/figures/README-ggheat_rownames-1.png" width="100%" />
 
-尽管图例由`ggplot2`控制，但默认图例名称取自`ComplexHeatmap::Heatmap`，以确保保持一致。
+# 这是一个Markdown文件
+
+虽然图例由`ggplot2`控制，但默认的图例名称取自`ComplexHeatmap::Heatmap`，以保持一致性。
+
+``` r
+draw(
+  ggheat(small_mat, function(p) {
+    p + scale_fill_viridis_c()
+  },
+  column_km = 2L, row_km = 3, row_names_gp = gpar(col = "red"),
+  name = "ComplexHeatmap"
+  )
+)
+```
+
+<img src="man/figures/README-ggheat_legend_name1-1.png" width="100%" />
+
+然而，您可以直接在`ggfn`中覆盖它。
+
+``` r
+draw(
+  ggheat(small_mat, function(p) {
+    p + scale_fill_viridis_c(name = "ggplot2")
+  },
+  column_km = 2L, row_km = 3, row_names_gp = gpar(col = "red"),
+  name = "ComplexHeatmap"
+  )
+)
+```
+
+<img src="man/figures/README-ggheat_legend_name2-1.png" width="100%" />
+
+内部图例将保留在热图主体面板中，因为这种类型的图例应该由用户有意放置，所以`ggheat`将不会在集合中包含它。
+
+``` r
+draw(
+  ggheat(small_mat, function(p) {
+    p +
+      geom_tile(
+        aes(fill = value),
+        width = 1L, height = 1L,
+        data = ~ dplyr::filter(.x, y <= x)
+      ) +
+      theme_bw() +
+      theme(
+        legend.position = "inside",
+        legend.position.inside = c(0.2, 0.3)
+      )
+  }, rect_gp = gpar(type = "none"), column_km = 2L, row_km = 3)
+)
+```
+
+<img src="man/figures/README-inside_legend-1.png" width="100%" />
+
+## `gganno`
+
+与`ggheat`类似，`gganno`的基本参数也是`ggfn`，它接受一个带有默认数据和映射的ggplot2对象，该对象由`ggplot(data, aes(.data$x))`（`which`=`"column"`）/ `ggplot(data, ggplot2::aes(y = .data$y))`（`which`=`"row"`）创建。
+
+如果原始数据是一个矩阵，则将其转换为长格式的数据框在`ggplot2`图形数据中。最终的ggplot2图形数据将包含以下列：
+
+- `.slice`：切片的行（`which`=`"row"`）或列（`which`=`"column"`）编号。
+
+- `.row_names`和`.row_index`：原始数据的行名称（只适用于存在名称时）和索引。
+
+- `.column_names`和`.column_index`：原始数据的列名称（只适用于存在名称时）和索引（仅适用于原始数据是一个矩阵的情况）。
+
+- `x` / `y`：指示x轴（或y轴）坐标。请不要使用`coord_flip`来翻转坐标，因为它可能会破坏内部操作。
+
+- `value`：注释矩阵的实际矩阵值（仅适用于原始数据是一个矩阵的情况）。
+
+`gganno`可以与`ggheat`和`ComplexHeatmap::Heatmap`无缝结合，尽管在后一种情况下不会提取图例。
+
+如果提供了一个矩阵，它将转换为长格式的数据框
 
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
-      data = sample(seq_len(nrow(small_mat)), nrow(small_mat), replace = TRUE),
+      data = matrix(1:10, nrow = nrow(small_mat)),
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
-#>   .slice .row_index x value
-#> 1      1          1 1     1
-#> 2      1          1 2     1
-#> 3      1          2 1     2
-#> 4      1          2 2     2
-#> 5      1          3 1     3
-#> 6      1          3 2     3
+#> Warning in matrix(1:10, nrow = nrow(small_mat)): data length [10] is not a
+#> sub-multiple or multiple of the number of rows [9]
+#>   .slice .row_index .column_index x value
+#> 1      1          1             1 1     1
+#> 2      1          1             2 1    10
+#> 3      1          2             1 8     2
+#> 4      1          2             2 8     1
+#> 5      1          3             1 6     3
+#> 6      1          3             2 6     2
 ```
 
 ``` r
@@ -323,19 +375,54 @@ dev.off()
 #>   2
 ```
 
-这是一个Markdown文件，请将其翻译成中文，不要修改任何现有的Markdown命令：
+如果提供了一个数据框，它将以其原始形式保留，并添加额外的必要列。
 
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
+    foo = gganno(
+      data = data.frame(
+        value = seq_len(nrow(small_mat)),
+        letter = sample(letters, nrow(small_mat), replace = TRUE)
+      ),
+      function(p) {
+        print(head(p$data))
+        p
+      }
+    )
+  )
+))
+#>   .slice .row_names .row_index x value letter
+#> 1      1          1          1 1     1      w
+#> 2      1          2          2 8     2      r
+#> 3      1          3          3 6     3      l
+#> 4      1          4          4 2     4      r
+#> 5      1          5          5 3     5      g
+#> 6      1          6          6 7     6      z
+```
+
+``` r
+dev.off()
+#> png 
+#>   2
+```
+
+如果提供一个原子向量，则它将被转换为矩阵，然后转换为长格式的数据框。
+
+这是一个Markdown文件，请将其翻译成中文，不要修改现有的Markdown命令：
+
+``` r
+pdf(NULL)
+draw(ggheat(small_mat,
+  top_annotation = eheat_anno(
     foo = gganno(
       data = sample(1:10, nrow(small_mat)),
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 #> ℹ convert simple vector to one-column matrix
@@ -354,19 +441,19 @@ dev.off()
 #>   2
 ```
 
-如果没有提供数据，则将使用热图矩阵，相同的原则适用于矩阵（重新整形为长格式数据框）。注意：对于列注释，热图矩阵将被转置，因为 `gganno` 总是将行视为观测值。
+如果未提供数据，则将使用热图矩阵，矩阵也是如此（重塑为长格式数据帧）。注意：对于列注释，热图矩阵将被转置，因为`gganno`始终将行视为观察结果。
 
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = NULL,
       function(p) {
         print(head(p$data))
         p
       }
-    ), which = "column"
+    )
   )
 ))
 #>   .slice .row_names .column_names .row_index .column_index x       value
@@ -387,15 +474,14 @@ dev.off()
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       data = NULL,
       function(p) {
         print(head(p$data))
         p
       }
-    ),
-    which = "row"
+    )
   )
 ))
 #>   .slice .row_names .column_names .row_index .column_index y      value
@@ -413,18 +499,18 @@ dev.off()
 #>   2
 ```
 
-您还可以在数据中提供一个函数（也可以使用 `purrr-lambda`），该函数将在热图矩阵中应用。注意：对于列注释，在将热图矩阵传递给此函数之前，矩阵将被转置。
+您还可以在数据中提供一个函数（也可以使用purrr-lambda），该函数将应用于热图矩阵。注意：对于列注释，热图矩阵将在传入此函数之前转置。
 
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = function(x) {
         if (identical(x, small_mat)) {
           print("矩阵未转置")
         } else if (identical(x, t(small_mat))) {
-          print("矩阵已转置")
+          print("矩阵转置")
         }
         rowSums(x)
       }
@@ -432,7 +518,7 @@ draw(ggheat(small_mat,
     which = "column"
   )
 ))
-#> [1] "矩阵已转置"
+#> [1] "矩阵转置"
 #> ℹ convert simple vector to one-column matrix
 ```
 
@@ -445,18 +531,17 @@ dev.off()
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       data = function(x) {
         if (identical(x, small_mat)) {
           print("矩阵未转置")
         } else if (identical(x, t(small_mat))) {
-          print("矩阵已转置")
+          print("矩阵转置")
         }
         rowSums(x)
       }
-    ),
-    which = "row"
+    )
   )
 ))
 #> [1] "矩阵未转置"
@@ -469,18 +554,18 @@ dev.off()
 #>   2
 ```
 
-类似地，我们可以利用ggplot2中提供的几何对象（geoms）在ggfn中创建注释。
+类似地，我们可以利用`ggfn`中提供的ggplot2中的几何对象（geoms）来创建注释。
 
 ``` r
 anno_data <- sample(1:10, nrow(small_mat))
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_point(aes(x, value))
       }
-    ), which = "column"
+    )
   )
 ))
 #> ℹ convert simple vector to one-column matrix
@@ -488,47 +573,49 @@ draw(ggheat(small_mat,
 
 <img src="man/figures/README-anno_point-1.png" width="100%" />
 
-图例也将被提取，类似地传递给 `annotation_legend_list` 参数。
+#> 绘制由gganno生成的注释
 
-``` r
+图例也将被提取，类似地，传入`annotation_legend_list`参数。
+
+```r
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
-      }, height = unit(5, "cm")
-    ), which = "column"
+      }, size = unit(5, "cm")
+    )
   )
 ), merge_legends = TRUE)
-#> ℹ convert simple vector to one-column matrix
+#> ℹ 将简单向量转换为一列矩阵
 ```
 
 <img src="man/figures/README-anno_bar-1.png" width="100%" />
 
-``` r
+```r
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_boxplot(aes(y = value, fill = factor(.slice)))
-      }, height = unit(5, "cm")
-    ), which = "column"
+      }, size = unit(5, "cm")
+    )
   ), column_km = 2L
 ), merge_legends = TRUE)
-#> ℹ convert simple vector to one-column matrix
+#> ℹ 将简单向量转换为一列矩阵
 ```
 
 <img src="man/figures/README-anno_box-1.png" width="100%" />
 
-``` r
+```r
 box_matrix1 <- matrix(rnorm(ncol(small_mat)^2L, 10), nrow = ncol(small_mat))
 colnames(box_matrix1) <- rep_len("group1", ncol(small_mat))
 box_matrix2 <- matrix(rnorm(ncol(small_mat)^2L, 20), nrow = ncol(small_mat))
 colnames(box_matrix2) <- rep_len("group2", ncol(small_mat))
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = cbind(box_matrix1, box_matrix2),
       function(p) {
@@ -550,13 +637,13 @@ draw(ggheat(small_mat,
             position = position_dodge(width = 0.9)
           ) +
           scale_fill_brewer(
-            name = "组别", type = "qual", palette = "Set3"
+            name = "Group", type = "qual", palette = "Set3"
           ) +
           scale_color_brewer(
-            name = "切片", type = "qual", palette = "Set1"
+            name = "Slice", type = "qual", palette = "Set1"
           )
-      }, height = unit(3, "cm")
-    ), which = "column"
+      }, size = unit(3, "cm")
+    )
   ), column_km = 2L
 ), merge_legends = TRUE)
 ```
@@ -565,15 +652,15 @@ draw(ggheat(small_mat,
 
 ``` r
 draw(ggheat(small_mat,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + aes(y = value) + geom_text(aes(label = .row_index))
-      }, height = unit(2, "cm")
-    ), which = "column"
+      }, size = unit(2, "cm")
+    )
   ),
-  bottom_annotation = HeatmapAnnotation(
+  bottom_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(y = value) +
@@ -581,22 +668,20 @@ draw(ggheat(small_mat,
           scale_y_reverse()
       },
       data = anno_data,
-      which = "column", height = unit(2, "cm")
-    ),
-    which = "column"
+      size = unit(2, "cm")
+    )
   ),
-  right_annotation = HeatmapAnnotation(
+  right_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(x = value) +
           geom_text(aes(label = .row_index))
       },
       data = anno_data,
-      width = unit(3, "cm")
-    ),
-    which = "row"
+      size = unit(3, "cm")
+    )
   ),
-  left_annotation = HeatmapAnnotation(
+  left_annotation = eheat_anno(
     foo = gganno(
       function(p) {
         p + aes(x = value) +
@@ -604,9 +689,8 @@ draw(ggheat(small_mat,
           scale_x_reverse()
       },
       data = anno_data,
-      width = unit(3, "cm")
-    ),
-    which = "row"
+      size = unit(3, "cm")
+    )
   ),
   row_km = 2L, column_km = 2L,
 ), merge_legends = TRUE)
@@ -618,17 +702,17 @@ draw(ggheat(small_mat,
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-`gganno`函数可以与`Heatmap`函数一起使用，这样，图例将不会被提取。通常情况下，我们应该只使用`ggheat`和`gganno`。
+`gganno` 可以与 `Heatmap` 函数配合使用，这样，图例将不会被提取。通常情况下，我们应该使用 `ggheat` 和 `gganno`。
 
 ``` r
-draw(Heatmap(small_mat,
-  top_annotation = HeatmapAnnotation(
+draw(ComplexHeatmap::Heatmap(small_mat,
+  top_annotation = eheat_anno(
     foo = gganno(
       data = anno_data,
       function(p) {
         p + geom_bar(aes(y = value, fill = factor(.row_index)), stat = "identity")
       }
-    ), which = "column"
+    )
   )
 ), merge_legends = TRUE)
 #> ℹ convert simple vector to one-column matrix
@@ -636,9 +720,9 @@ draw(Heatmap(small_mat,
 
 <img src="man/figures/README-Heatmap_gganno-1.png" width="100%" />
 
-## `anno_gg`和`anno_gg2`
+## `anno_gg` and `anno_gg2`
 
-这两个函数的作用与ComplexHeatmap中的其他注释函数类似。它们接受一个ggplot对象，并将其适应ComplexHeatmap注释区域。
+这两个函数与ComplexHeatmap中的其他注释函数类似。它们接受一个ggplot对象，并将其适应到ComplexHeatmap注释区域。
 
 ``` r
 g <- ggplot(mpg, aes(displ, hwy, colour = class)) +
@@ -647,10 +731,10 @@ m <- matrix(rnorm(100), 10)
 
 # anno_gg-panel: clip = "off" -------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "off",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -662,10 +746,10 @@ ggheat(m,
 ``` r
 # anno_gg-panel: clip = "on" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "panel",
       clip = "on",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -677,9 +761,9 @@ ggheat(m,
 ``` r
 # anno_gg-plot --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "plot",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -692,9 +776,9 @@ ggheat(m,
 
 # anno_gg-full --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg(g, "full",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -703,15 +787,15 @@ ggheat(m,
 
 <img src="man/figures/README-anno_gg-plot-2.png" width="100%" />
 
-`anno_gg2` 和 `anno_gg` 是相同的，区别在于它们的参数，它允许对剪辑功能进行更精确的调整。
+`anno_gg2` 与 `anno_gg` 相同，只是在参数上有所不同，并允许更精确地调整剪切功能。
 
 ``` r
 # anno_gg2-panel: margins = NULL -------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = NULL,
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -720,13 +804,13 @@ ggheat(m,
 
 <img src="man/figures/README-anno_gg2-panel1-1.png" width="100%" />
 
-``` r
+```r
 # anno_gg2-panel: margins = "l" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "l",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -735,13 +819,13 @@ ggheat(m,
 
 <img src="man/figures/README-anno_gg2-panel2-1.png" width="100%" />
 
-``` r
+```r
 # anno_gg2-panel: margins = "r" --------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "panel",
       margins = "r",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -750,12 +834,12 @@ ggheat(m,
 
 <img src="man/figures/README-anno_gg2-panel3-1.png" width="100%" />
 
-``` r
+```r
 # anno_gg2-plot ---------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(g, "plot",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )
@@ -764,10 +848,10 @@ ggheat(m,
 
 <img src="man/figures/README-anno_gg2-plot-1.png" width="100%" />
 
-``` r
+```r
 # anno_gg2-full --------------------
 ggheat(m,
-  top_annotation = HeatmapAnnotation(
+  top_annotation = eheat_anno(
     ggplot = anno_gg2(
       g + guides(colour = guide_legend(
         theme = theme(
@@ -780,7 +864,7 @@ ggheat(m,
         ncol = 2L
       )),
       align_with = "full",
-      height = unit(3, "cm"),
+      size = unit(3, "cm"),
       show_name = FALSE
     )
   )

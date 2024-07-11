@@ -32,7 +32,7 @@ the dimensions of the entire set of column/row annotations simultaneously
 using the \code{annotation_size} or \code{size} parameters.
 }
 \examples{
-# No need to specify which argument if combine with `ggheat` or `eheat`
+# No need to specify `which` argument if combined with `ggheat` or `eheat`
 g <- ggplot(mpg, aes(displ, hwy, colour = class)) +
     geom_point()
 m <- matrix(rnorm(100), 10)
