@@ -21,5 +21,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/Yunuuuu/eheat/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Yunuuuu/eheat/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+*Read this in other languages: [English](README.md), [简体中文](README.zh-cn.md)*
+
 ```{r child = "vignettes/eheat.Rmd"}
 ```
