@@ -5,7 +5,7 @@
   - [`ggheat`](#ggheat)
   - [`gganno`](#gganno)
   - [`anno_gg` 和 `anno_gg2`](#anno_gg-和-anno_gg2)
-  - [会话信息](#会话信息)
+  - [Session information](#session-information)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -21,7 +21,7 @@
 
 这个包用作 [ggplot2](https://ggplot2.tidyverse.org/) 和
 [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap) 之间的桥梁。
-基本上，通过 `eheat` 包，可以在 ComplexHeatmap 中利用所有的 ggplot2 geoms以及其他操作，除了facet面板操作（在 `eheat` 包也不应该进行ggplot2 facet操作）。幸运的是，ComplexHeatmap 能够很好地处理这些操作。
+基本上，通过 `eheat` 包，可以在`ComplexHeatmap`中使用除facet面板操作（在 `eheat` 包也不应该进行ggplot2 facet操作）以外的所有的`ggplot2`操作(包括geoms,stats,guides,themes)。幸运的是，ComplexHeatmap 能够很好地处理facet面板操作。
 
 ## 安装
 
@@ -295,8 +295,6 @@ draw(ggheat(small_mat, function(p) {
 
 尽管图例由`ggplot2`控制，但默认图例名称取自`ComplexHeatmap::Heatmap`，以确保保持一致。
 
-## 翻译 private_upload/2024-07-11-07-09-27/README.md.part-2.md
-
 ``` r
 pdf(NULL)
 draw(ggheat(small_mat,
@@ -325,8 +323,6 @@ dev.off()
 #>   2
 ```
 
-## 翻译 private_upload/2024-07-11-07-09-27/README.md.part-3.md
-
 这是一个Markdown文件，请将其翻译成中文，不要修改任何现有的Markdown命令：
 
 ``` r
@@ -342,7 +338,7 @@ draw(ggheat(small_mat,
     ), which = "column"
   )
 ))
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
 #>   .slice .column_names .row_index .column_index x value
 #> 1      1            V1          1             1 1     9
 #> 2      1            V1          2             1 8     3
@@ -437,7 +433,7 @@ draw(ggheat(small_mat,
   )
 ))
 #> [1] "矩阵已转置"
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
 ```
 
 ``` r
@@ -464,7 +460,7 @@ draw(ggheat(small_mat,
   )
 ))
 #> [1] "矩阵未转置"
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
 ```
 
 ``` r
@@ -487,14 +483,12 @@ draw(ggheat(small_mat,
     ), which = "column"
   )
 ))
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
 ```
 
 <img src="man/figures/README-anno_point-1.png" width="100%" />
 
 图例也将被提取，类似地传递给 `annotation_legend_list` 参数。
-
-## 翻译 private_upload/2024-07-11-07-09-27/README.md.part-4.md
 
 ``` r
 draw(ggheat(small_mat,
@@ -507,7 +501,7 @@ draw(ggheat(small_mat,
     ), which = "column"
   )
 ), merge_legends = TRUE)
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
 ```
 
 <img src="man/figures/README-anno_bar-1.png" width="100%" />
@@ -523,7 +517,7 @@ draw(ggheat(small_mat,
     ), which = "column"
   ), column_km = 2L
 ), merge_legends = TRUE)
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
 ```
 
 <img src="man/figures/README-anno_box-1.png" width="100%" />
@@ -616,10 +610,10 @@ draw(ggheat(small_mat,
   ),
   row_km = 2L, column_km = 2L,
 ), merge_legends = TRUE)
-#> ℹ 将简单向量转换为单列矩阵
-#> ℹ 将简单向量转换为单列矩阵
-#> ℹ 将简单向量转换为单列矩阵
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
+#> ℹ convert simple vector to one-column matrix
+#> ℹ convert simple vector to one-column matrix
+#> ℹ convert simple vector to one-column matrix
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
@@ -637,7 +631,7 @@ draw(Heatmap(small_mat,
     ), which = "column"
   )
 ), merge_legends = TRUE)
-#> ℹ 将简单向量转换为单列矩阵
+#> ℹ convert simple vector to one-column matrix
 ```
 
 <img src="man/figures/README-Heatmap_gganno-1.png" width="100%" />
@@ -663,11 +657,6 @@ ggheat(m,
 )
 ```
 
-## 翻译 private_upload/2024-07-11-07-09-27/README.md.part-5.md
-
-这是一个Markdown文件，请将其翻译成中文，并且不要修改任何现有的Markdown命令：
-
-```
 <img src="man/figures/README-anno_gg-panel-1.png" width="100%" />
 
 ``` r
@@ -800,38 +789,34 @@ ggheat(m,
 
 <img src="man/figures/README-anno_gg2-full-1.png" width="100%" />
 
-## Session 信息
-```
-
-
-## 翻译 private_upload/2024-07-11-07-09-27/README.md.part-6.md
+## Session information
 
 ``` r
 sessionInfo()
-#> R版本4.4.0（2024年04月24日）
-#> 平台：x86_64-pc-linux-gnu
-#> 运行于：Ubuntu 24.04 LTS
+#> R version 4.4.0 (2024-04-24)
+#> Platform: x86_64-pc-linux-gnu
+#> Running under: Ubuntu 24.04 LTS
 #> 
-#> 矩阵乘积：默认设置
-#> BLAS / LAPACK：/usr/lib/x86_64-linux-gnu/libmkl_rt.so；LAPACK版本3.8.0
+#> Matrix products: default
+#> BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/libmkl_rt.so;  LAPACK version 3.8.0
 #> 
-#> 区域设置：
+#> locale:
 #>  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
 #>  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
 #>  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
 #> [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
 #> 
-#> 时区：Asia/Shanghai
-#> 时区代码来源：系统（glibc）
+#> time zone: Asia/Shanghai
+#> tzcode source: system (glibc)
 #> 
-#> 已附加的基本包：
+#> attached base packages:
 #> [1] grid      stats     graphics  grDevices utils     datasets  methods  
 #> [8] base     
 #> 
-#> 其他已附加的包：
+#> other attached packages:
 #> [1] eheat_0.99.8          ggplot2_3.5.1         ComplexHeatmap_2.20.0
 #> 
-#> 通过命名空间加载的包（未附加）：
+#> loaded via a namespace (and not attached):
 #>  [1] utf8_1.2.4          generics_0.1.3      tidyr_1.3.1        
 #>  [4] shape_1.4.6.1       digest_0.6.36       magrittr_2.0.3     
 #>  [7] evaluate_0.24.0     RColorBrewer_1.1-3  iterators_1.0.14   
@@ -853,5 +838,3 @@ sessionInfo()
 #> [55] rjson_0.2.21        htmltools_0.5.8.1   labeling_0.4.3     
 #> [58] rmarkdown_2.27      Cairo_1.6-2         compiler_4.4.0
 ```
-
-
